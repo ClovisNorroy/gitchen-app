@@ -1,0 +1,29 @@
+{
+    "AppBar":{
+        "menu": "Menu",
+        "logIn": "Log in",
+        "logOut": "Log out"
+    },
+    "Menu": {
+        "lunch": "Lunch",
+        "diner": "Diner",
+        "save": "Save",
+        "reset": "Reset"
+    },
+    "Login":{
+        "logIn": "Log in",
+        "username": "Username",
+        "password": "Password",
+        "notRegister": "Not registered yet ?",
+        "register": "Register",
+        "signIn": "Sign in"
+    },
+    "Signup":{
+        "signUp": "Sign up",
+        "username": "Username",
+        "email": "Email adddress",
+        "password": "Password",
+        "confirmPassword": "Confirm password",
+        "register": "Register"
+    }
+}

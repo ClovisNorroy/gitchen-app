@@ -1,0 +1,19 @@
+#navbar a.active .button {
+    color: red !important;
+
+  }
+
+  #logout-button{
+    position: 'relative';
+    margin-left: 0;
+    width: '100%';
+    align-items: left;
+  }
+
+  .divider{
+    width: 100%;
+  }
+
+  .hidden-button{
+    display: none;
+  }

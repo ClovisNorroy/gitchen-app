@@ -1,0 +1,29 @@
+{
+    "AppBar":{
+        "menu": "Menu",
+        "logIn": "Connexion",
+        "logOut": "Déconnexion"
+    },
+    "Menu": {
+        "lunch": "Déjeuné",
+        "diner": "Dîner",
+        "save": "Enregister",
+        "reset": "réinitialiser"
+    },
+    "Login":{
+        "logIn": "Connexion",
+        "username": "Nom d'utilisateur",
+        "password": "Mot de passe",
+        "notRegister": "Pas encore enregistré ?",
+        "register": "Inscrivez vous",
+        "signIn": "Se connecter"
+    },
+    "Signup":{
+        "signUp": "Enregistrement",
+        "username": "Nom d'utilisateur",
+        "email": "adresse email",
+        "password": "Mot de passe",
+        "confirmPassword": "Retaper le mot de passe",
+        "register": "S'enregister"
+    }
+}

@@ -1,0 +1,9 @@
+#navbar a.active:first-child {
+    color: red;
+  }
+
+  #logout-button{
+    position: 'relative';
+    margin-left: 0;
+    width: '100%';
+  }
