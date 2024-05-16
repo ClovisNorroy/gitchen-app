@@ -75,7 +75,7 @@ function SingleWeekMenu(props){
     }
 
     return (
-        <Box sx={{mt: 10}}>
+        <Box>
         <Table>
         <TableHead>
             <TableRow>
