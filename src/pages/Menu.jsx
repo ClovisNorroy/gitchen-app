@@ -1,12 +1,20 @@
-import { TableContainer } from "@mui/material";
+import { TableContainer, Box, Grid } from "@mui/material";
 import SingleWeekMenu from "../components/SingleWeekMenu";
+import GroceryList from "../components/GroceryList";
 
-function Menu(){ 
+
+//TODO: rename page
+export default function Menu(){ 
     return(
-        <TableContainer>
-            <SingleWeekMenu key={"weekMenu_1"} weekNumber={1}/>
-        </TableContainer>
+        <Grid container>
+            <Grid item xs={10}>
+                <TableContainer>
+                <SingleWeekMenu key={"weekMenu_1"} weekNumber={1}/>
+                </TableContainer>
+            </Grid>
+            <Grid item xs={2}>
+                <GroceryList/>
+            </Grid>
+        </Grid>
     );
 }
-
-export default Menu;
