@@ -75,7 +75,7 @@ export default function GroceryList() {
                 <Typography>{isMovingtoIndex === index ? whatItemIsMoved.item : ''}</Typography>
         </ListItem>
         <ListItem key={`item-${index}`}
-        sx={{paddingRight:0}}
+        sx={{padding:0}}
             secondaryAction={
                 <IconButton edge="end" 
                     aria-label='move-button'
@@ -84,7 +84,7 @@ export default function GroceryList() {
                     <SwapVertIcon/>
                 </IconButton>
             }>
-          <ListItemButton>
+          <ListItemButton sx={{padding:0}}>
             <ListItemIcon>
               <CheckBoxOutlineBlank
                 onClick={() => handleToggleChecked(index)}
@@ -103,8 +103,8 @@ export default function GroceryList() {
         </ListItem>
         </>
       ))}
-      <ListItem key="new-item">
-        <ListItemButton>
+      <ListItem key="new-item" sx={{padding:0}}>
+        <ListItemButton sx={{padding:0}}>
           <ListItemIcon>
             <CheckBoxOutlineBlank />
           </ListItemIcon>
