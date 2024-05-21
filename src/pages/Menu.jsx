@@ -13,7 +13,7 @@ export default function Menu(){
                 </TableContainer>
             </Grid>
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
-                <Typography textAlign='center' variant="h5"
+                <Typography textAlign='center' variant="h5" marginBottom='20px'
                 >Liste des courses</Typography>
                 <GroceryList/>
             </Grid>
