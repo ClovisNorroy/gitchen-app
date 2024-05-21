@@ -1,9 +1,9 @@
-import { TableContainer, Box, Grid } from "@mui/material";
+import { TableContainer, Box, Grid, Typography, Container } from "@mui/material";
 import SingleWeekMenu from "../components/SingleWeekMenu";
 import GroceryList from "../components/GroceryList";
 
 
-//TODO: rename page
+//TODO: rename page (DashBoard?)
 export default function Menu(){ 
     return(
         <Grid container>
@@ -12,7 +12,9 @@ export default function Menu(){
                 <SingleWeekMenu key={"weekMenu_1"} weekNumber={1}/>
                 </TableContainer>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
+                <Typography textAlign='center' variant="h5"
+                >Liste des courses</Typography>
                 <GroceryList/>
             </Grid>
         </Grid>

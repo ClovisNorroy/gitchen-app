@@ -7,7 +7,9 @@ function RootLayout() {
   return (
     <>
       <NavigationBar />
-      <Box sx={{mt: 10}}><Outlet /></Box>
+      <Box sx={{mt: 10, height: '90vh', display: 'flex'}}>
+        <Outlet />
+      </Box>
       <CookieBanner/>
     </>
 

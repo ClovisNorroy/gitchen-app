@@ -63,7 +63,7 @@ export default function GroceryList() {
   }
 
   return (
-    <List dense>
+    <List dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
       {groceryList.map((item, index) => (
         <>
                 <ListItem
