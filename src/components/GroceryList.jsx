@@ -68,18 +68,19 @@ export default function GroceryList() {
         <>
                 <ListItem
         key={`list-move-${index}`}
-            sx={{display: isMoving ? "block" : "none", padding: 1}}
+            sx={{display: isMoving ? "block" : "none"}}
             onMouseEnter={() => setIsMovingToIndex(index)}
             onMouseLeave={() => setIsMovingToIndex(null)}
             onClick={() => handleChangeItemIndex(index, whatItemIsMoved.index)}>
                 <Typography>{isMovingtoIndex === index ? whatItemIsMoved.item : ''}</Typography>
         </ListItem>
         <ListItem key={`item-${index}`}
+        sx={{paddingRight:0}}
             secondaryAction={
                 <IconButton edge="end" 
                     aria-label='move-button'
                     onClick={() => handleMoveItem({item: item, index: index})}
-                    sx={{display: isMoving ? "none" : "block"}}>
+                    sx={{display: isMoving ? "none" : "block",}}>
                     <SwapVertIcon/>
                 </IconButton>
             }>
@@ -90,6 +91,7 @@ export default function GroceryList() {
               />
             </ListItemIcon>
             <TextField
+              multiline
               variant="standard"
               InputProps={{ disableUnderline: true }}
               value={item}
