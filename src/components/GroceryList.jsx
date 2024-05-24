@@ -1,6 +1,7 @@
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import {
+  Button,
     IconButton,
   List,
   ListItem,
@@ -9,7 +10,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 //TODO: !! Use react-dnd !!
 const moveItem = (array, to, from) => {
@@ -20,12 +21,34 @@ const moveItem = (array, to, from) => {
 };
 
 export default function GroceryList() {
-  const TEST_DATA = ["Pommes", "Gateaux", "Oeufs", "PTT", "Fromage", "Poulet"];
-  const [groceryList, setGroceryList] = useState(TEST_DATA);
+
+  const [groceryList, setGroceryList] = useState([]);
   const [isMoving, setIsMoving] = useState(false);
   const [isMovingtoIndex, setIsMovingToIndex] = useState(null);
   const [whatItemIsMoved, setWhatItemIsMoved] = useState({item:null, index:null});
   const newItemRef = useRef();
+
+  useEffect(() => {
+    fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+      credentials: 'include',
+      method: 'GET'
+    }).then( response => response.json())
+    .then( data => {
+      console.log(data);
+      setGroceryList(data);
+    }
+    );
+  }, []);
+
+  function saveGroceryList(){
+    fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(groceryList)
+    }).then( response => {
+      console.log(response.text());
+    });
+  }
 
   function handleChangeItemIndex(newIndex, oldIndex){
     const oldList = [...groceryList];
@@ -117,6 +140,8 @@ export default function GroceryList() {
           />
         </ListItemButton>
       </ListItem>
+      <Button onClick={saveGroceryList}>Save List</Button>
     </List>
   );
+  
 }
