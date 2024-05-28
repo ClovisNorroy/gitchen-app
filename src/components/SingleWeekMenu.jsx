@@ -1,9 +1,8 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
 
 function SingleWeekMenu(props){
-
+    const isLoggedIn = localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+process.env.REACT_APP_CONNECTION_EXPIRATION_TIME ;
     const [meals, setMeals] = useState([]);
 
     function handleMealChange(event, index){
@@ -25,28 +24,27 @@ function SingleWeekMenu(props){
             return mealsArray[dayNumber];
         }
     }
-    //TODO: Use env variable for URL
+
     function saveMenu(){
-        console.log(Cookies.get("logged_in"));
-        if(Cookies.get("logged_in") === "true"){
+        if(isLoggedIn){
             fetch(process.env.REACT_APP_GITCHEN_API+"/api/menu/save", {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify(meals)
             }).then(response => {return response.text();})
         } else {
-            Cookies.set("menu", JSON.stringify(meals), { sameSite: 'strict'});
+            localStorage.setItem("menu", JSON.stringify(meals));
         }
     }
 
     function resetMenu(){
         const emptyMenu = Array.apply(null, Array(14)).map(() => {return ""});
-        Cookies.set("menu", JSON.stringify(emptyMenu), { sameSite: 'strict'});
+        localStorage.setItem("menu", JSON.stringify(emptyMenu));
         setMeals(emptyMenu);
     }
 
     useEffect(() => {
-        if(Cookies.get("logged_in") === "true"){
+        if(isLoggedIn){
             fetch(process.env.REACT_APP_GITCHEN_API+"/api/menu", {
                 method: "GET",
                 credentials: "include"
@@ -59,15 +57,15 @@ function SingleWeekMenu(props){
                 setMeals([...Menu]);
             })
         } else {
-            // Check if exist in cookies or create empty
-            if(typeof Cookies.get("menu") !== "undefined"){
-                setMeals(JSON.parse(Cookies.get("menu")));
+            // Check if exist in localStorage or create empty
+            if(localStorage.getItem("menu")){
+                setMeals(JSON.parse(localStorage.getItem("menu")));
             }
             else {
                 setMeals(Array.apply(null, Array(14)).map(() => {return ""}));
             }
         }
-    }, []);
+    }, [isLoggedIn]);
 
     const weekHeader = [<TableCell key={"weekHeader_"+props.weekNumber+"_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){

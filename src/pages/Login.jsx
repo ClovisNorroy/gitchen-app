@@ -1,6 +1,5 @@
 import { Button, Container, TextField, Grid, Typography, Box} from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import Cookies from "js-cookie";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -9,9 +8,9 @@ export default function Login() {
   const [showLogInError, setShowLoginError] = useState(false);
   const navigate = useNavigate();
 
-  //TODO: Remove and avoid Reload
+  //TODO: Remove and avoid Reload Use Context API
   useEffect(()=>{
-    if(Cookies.get("logged_in") === "true"){
+    if(localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+process.env.REACT_APP_CONNECTION_EXPIRATION_TIME){
       navigate("/");
     }
   }, [navigate]);
@@ -22,12 +21,10 @@ export default function Login() {
       method: 'POST',
       credentials: "include",
       body: JSON.stringify({ username: usernameRef.current.value, password: passwordRef.current.value }),
-      //body: JSON.stringify({ username: "Engywook", password: "123456789" }),
       headers: { "Content-Type": "application/json"}
     }).then(response => { console.log(response); return response; }).then(data => {
       if(data.status === 204){
-        Cookies.set("logged_in", true, { expires: 1/24});
-        Cookies.remove("menu");
+        localStorage.setItem("lastConnectionTime", new Date().getTime());
         window.location.reload();
       }
       else{

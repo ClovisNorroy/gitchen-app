@@ -1,5 +1,4 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
-import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
 import { useEffect, useState } from "react";
@@ -9,7 +8,9 @@ function NavigationBar(){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(()=>{
-        setIsLoggedIn( Cookies.get("logged_in") ? true : false);
+        const isLoggedIn = localStorage.getItem("lastConnectionTime") && 
+            new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+process.env.REACT_APP_CONNECTION_EXPIRATION_TIME ;
+        setIsLoggedIn(isLoggedIn);
     }, []);
 
     function logout(){
@@ -20,7 +21,7 @@ function NavigationBar(){
         .then(response => 
             {
                 console.log(response.text());
-                Cookies.remove("logged_in");
+                localStorage.removeItem("lastConnectionTime");
                 window.location.reload();
             });
         }
