@@ -1,5 +1,6 @@
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
+import { isLoggedIn } from '../assets/helperFunctions';
 import {
   Button,
     IconButton,
@@ -29,25 +30,46 @@ export default function GroceryList() {
   const newItemRef = useRef();
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
-      credentials: 'include',
-      method: 'GET'
-    }).then( response => response.json())
-    .then( data => {
-      console.log(data);
-      setGroceryList(data);
+    if(isLoggedIn()){
+      fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+        credentials: 'include',
+        method: 'GET'
+      }).then( response => response.json())
+      .then( data => {
+        setGroceryList(data);
+      }
+      );
     }
-    );
+    else{
+      if(localStorage.getItem("groceryList")){
+        setGroceryList(JSON.parse(localStorage.getItem("groceryList")));
+      }else{
+        setGroceryList([]);
+      }
+    }
   }, []);
 
   function saveGroceryList(){
-    fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
-      credentials: 'include',
-      method: 'POST',
-      body: JSON.stringify(groceryList)
-    }).then( response => {
-      console.log(response.text());
-    });
+    let upToDateGroceryList;
+    //Save new item if not done already (No blur and no enter pressed)
+    if(newItemRef.current.value !== ""){
+      upToDateGroceryList = [...groceryList, newItemRef.current.value];
+      setGroceryList([...groceryList, newItemRef.current.value]);      
+      newItemRef.current.value = "";
+    }else
+      upToDateGroceryList = groceryList;
+    if(isLoggedIn()){
+      console.log(groceryList);
+      fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+        credentials: 'include',
+        method: 'POST',
+        body: JSON.stringify(groceryList)
+      }).then( response => {
+        console.log(response.text());
+      });
+    }else{
+      localStorage.setItem("groceryList", JSON.stringify(upToDateGroceryList));
+    }
   }
 
   function handleChangeItemIndex(newIndex, oldIndex){
@@ -83,6 +105,12 @@ export default function GroceryList() {
       setGroceryList([...groceryList, newItemRef.current.value]);
       newItemRef.current.value = "";
     }
+  }
+
+  function handleNewItemOnBlur() {
+      setGroceryList([...groceryList, newItemRef.current.value]);
+      console.log("OnBlur");
+      newItemRef.current.value = "";
   }
 
   return (
