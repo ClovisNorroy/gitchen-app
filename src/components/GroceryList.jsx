@@ -50,20 +50,20 @@ export default function GroceryList() {
   }, []);
 
   function saveGroceryList(){
-    let upToDateGroceryList;
+    let upToDateGroceryList = groceryList;
     //Save new item if not done already (No blur and no enter pressed)
     if(newItemRef.current.value !== ""){
       upToDateGroceryList = [...groceryList, newItemRef.current.value];
       setGroceryList([...groceryList, newItemRef.current.value]);      
       newItemRef.current.value = "";
-    }else
-      upToDateGroceryList = groceryList;
+    }
+
     if(isLoggedIn()){
       console.log(groceryList);
       fetch(process.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'POST',
-        body: JSON.stringify(groceryList)
+        body: JSON.stringify(upToDateGroceryList)
       }).then( response => {
         console.log(response.text());
       });
