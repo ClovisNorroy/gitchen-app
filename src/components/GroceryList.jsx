@@ -2,6 +2,7 @@ import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { isLoggedIn } from '../assets/helperFunctions';
 import {
+  Box,
   Button,
     IconButton,
   List,
@@ -54,7 +55,7 @@ export default function GroceryList() {
     //Save new item if not done already (No blur and no enter pressed)
     if(newItemRef.current.value !== ""){
       upToDateGroceryList = [...groceryList, newItemRef.current.value];
-      setGroceryList([...groceryList, newItemRef.current.value]);      
+      setGroceryList([...groceryList, newItemRef.current.value]);
       newItemRef.current.value = "";
     }
 
@@ -107,18 +108,18 @@ export default function GroceryList() {
     }
   }
 
-  function handleNewItemOnBlur() {
+/*   function handleNewItemOnBlur() {
       setGroceryList([...groceryList, newItemRef.current.value]);
       console.log("OnBlur");
       newItemRef.current.value = "";
-  }
+  } */
 
   return (
-    <List dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
+    <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
       {groceryList.map((item, index) => (
-        <>
-                <ListItem
-        key={`list-move-${index}`}
+        <Box key={`box-${index}`}>
+            <ListItem
+            key={`list-move-${index}`}
             sx={{display: isMoving ? "block" : "none"}}
             onMouseEnter={() => setIsMovingToIndex(index)}
             onMouseLeave={() => setIsMovingToIndex(null)}
@@ -152,7 +153,7 @@ export default function GroceryList() {
             />
           </ListItemButton>
         </ListItem>
-        </>
+        </Box>
       ))}
       <ListItem key="new-item" sx={{padding:0}}>
         <ListItemButton sx={{padding:0}}>
@@ -168,7 +169,7 @@ export default function GroceryList() {
           />
         </ListItemButton>
       </ListItem>
-      <Button onClick={saveGroceryList}>Save List</Button>
+      <Button onClick={saveGroceryList}>Enregister la liste</Button>
     </List>
   );
   
