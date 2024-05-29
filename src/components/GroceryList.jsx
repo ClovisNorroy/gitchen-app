@@ -37,7 +37,7 @@ export default function GroceryList() {
         method: 'GET'
       }).then( response => response.json())
       .then( data => {
-        setGroceryList(data);
+        setGroceryList(data.length ? data : []);
       }
       );
     }
