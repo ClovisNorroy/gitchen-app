@@ -2,7 +2,7 @@ import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField
 import { useEffect, useState } from "react";
 
 function SingleWeekMenu(props){
-    const isLoggedIn = localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.REACT_APP_CONNECTION_EXPIRATION_TIME ;
+    const isLoggedIn = localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.VITET_APP_CONNECTION_EXPIRATION_TIME ;
     const [meals, setMeals] = useState([]);
 
     function handleMealChange(event, index){
@@ -27,7 +27,7 @@ function SingleWeekMenu(props){
 
     function saveMenu(){
         if(isLoggedIn){
-            fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/menu/save", {
+            fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu/save", {
                 method: "POST",
                 credentials: "include",
                 body: JSON.stringify(meals)
@@ -45,7 +45,7 @@ function SingleWeekMenu(props){
 
     useEffect(() => {
         if(isLoggedIn){
-            fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/menu", {
+            fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu", {
                 method: "GET",
                 credentials: "include"
             }).then(response => {return response.json();})

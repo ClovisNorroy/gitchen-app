@@ -32,7 +32,7 @@ export default function GroceryList() {
 
   useEffect(() => {
     if(isLoggedIn()){
-      fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+      fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'GET'
       }).then( response => response.json())
@@ -61,7 +61,7 @@ export default function GroceryList() {
 
     if(isLoggedIn()){
       console.log(groceryList);
-      fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/grocerylist",{
+      fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'POST',
         body: JSON.stringify(upToDateGroceryList)

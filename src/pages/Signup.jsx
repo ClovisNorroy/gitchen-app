@@ -64,7 +64,7 @@ function Signup() {
 
 
   function sendSignup() {
-    fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/signup", {
+    fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/signup", {
       method: 'POST',
       body: JSON.stringify({email: emailRef.current.value, username: usernameRef.current.value, password: passwordRef.current.value }),
       headers: { "Content-Type": "application/json" }
