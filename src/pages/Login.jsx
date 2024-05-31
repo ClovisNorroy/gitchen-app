@@ -10,14 +10,14 @@ export default function Login() {
 
   //TODO: Remove and avoid Reload Use Context API
   useEffect(()=>{
-    if(localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+process.env.REACT_APP_CONNECTION_EXPIRATION_TIME){
+    if(localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.REACT_APP_CONNECTION_EXPIRATION_TIME){
       navigate("/");
     }
   }, [navigate]);
 
   //TODO: Add timer
   function sendLogin() {
-    fetch(process.env.REACT_APP_GITCHEN_API+"/api/login_check", {
+    fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/login_check", {
       method: 'POST',
       credentials: "include",
       body: JSON.stringify({ username: usernameRef.current.value, password: passwordRef.current.value }),

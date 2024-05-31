@@ -9,12 +9,12 @@ function NavigationBar(){
 
     useEffect(()=>{
         const isLoggedIn = localStorage.getItem("lastConnectionTime") && 
-            new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+process.env.REACT_APP_CONNECTION_EXPIRATION_TIME ;
+            new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.REACT_APP_CONNECTION_EXPIRATION_TIME ;
         setIsLoggedIn(isLoggedIn);
     }, []);
 
     function logout(){
-        fetch(process.env.REACT_APP_GITCHEN_API+"/api/logout", {
+        fetch(import.meta.env.REACT_APP_GITCHEN_API+"/api/logout", {
             credentials: "include",
             method: "POST"
         })
