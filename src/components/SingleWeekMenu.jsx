@@ -69,7 +69,7 @@ function SingleWeekMenu(props){
 
     const weekHeader = [<TableCell key={"weekHeader_"+props.weekNumber+"_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){
-        weekHeader.push(<TableCell key={"weekHeader_"+props.weekNumber+"_day_"+day}>{'Day '+ day}</TableCell>);
+        weekHeader.push(<TableCell key={"weekHeader_"+props.weekNumber+"_day_"+day}>{'Jour '+ day}</TableCell>);
     }
 
     return (
@@ -117,8 +117,8 @@ function SingleWeekMenu(props){
             </TableRow>
         </TableBody>
     </Table>
-    <Button onClick={saveMenu}>Save</Button>
-    <Button onClick={resetMenu}>Reset</Button>
+    <Button onClick={saveMenu}>Enregister</Button>
+    <Button onClick={resetMenu}>Réinitialiser</Button>
     </Box>
     )
 }
