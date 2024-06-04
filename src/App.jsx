@@ -1,10 +1,10 @@
 import './App.css';
-import Menu from './pages/Menu';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from './pages/Root';
 import PageNotFound from './pages/PageNotFound';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Planner from './pages/Planner';
 
 function App({children}) {
   const router = createBrowserRouter([
@@ -13,7 +13,7 @@ function App({children}) {
       element: <RootLayout />,
       errorElement: <PageNotFound />,
       children: [
-        { path: '/', element: <Menu/>},
+        { path: '/', element: <Planner/>},
         { path: '/register', element: <Signup/>},
         { path: '/login', element: <Login/>}
       ]

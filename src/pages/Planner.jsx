@@ -2,9 +2,7 @@ import { TableContainer, Box, Grid, Typography, Container } from "@mui/material"
 import SingleWeekMenu from "../components/SingleWeekMenu";
 import GroceryList from "../components/GroceryList";
 
-
-//TODO: rename page (DashBoard?)
-export default function Menu(){ 
+export default function Planner(){ 
     return(
         <Grid container>
             <Grid item xs={10}>
