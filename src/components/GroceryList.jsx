@@ -1,6 +1,6 @@
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { isLoggedIn } from '../assets/helperFunctions';
+import { checkUserIsLogged } from '../assets/helperFunctions';
 import {
   Box,
   Button,
@@ -31,7 +31,7 @@ export default function GroceryList() {
   const newItemRef = useRef();
 
   useEffect(() => {
-    if(isLoggedIn()){
+    if(checkUserIsLogged()){
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'GET'
@@ -59,7 +59,7 @@ export default function GroceryList() {
       newItemRef.current.value = "";
     }
 
-    if(isLoggedIn()){
+    if(checkUserIsLogged()){
       console.log(groceryList);
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',

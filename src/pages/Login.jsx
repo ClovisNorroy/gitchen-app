@@ -1,19 +1,14 @@
 import { Button, Container, TextField, Grid, Typography, Box} from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { LoginContext } from "../store/login-context";
 
 export default function Login() {
+  const { loginSuccessfull } = useContext(LoginContext);
   const passwordRef = useRef('');
   const usernameRef = useRef('');
   const [showLogInError, setShowLoginError] = useState(false);
   const navigate = useNavigate();
-
-  //TODO: Remove and avoid Reload Use Context API
-  useEffect(()=>{
-    if(localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.VITE_APP_CONNECTION_EXPIRATION_TIME){
-      navigate("/");
-    }
-  }, [navigate]);
 
   //TODO: Add timer
   function sendLogin() {
@@ -24,8 +19,8 @@ export default function Login() {
       headers: { "Content-Type": "application/json"}
     }).then(response => { console.log(response); return response; }).then(data => {
       if(data.status === 204){
-        localStorage.setItem("lastConnectionTime", new Date().getTime());
-        window.location.reload();
+        loginSuccessfull();
+        navigate("/");
       }
       else{
         setShowLoginError(true);

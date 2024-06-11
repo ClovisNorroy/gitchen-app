@@ -1,17 +1,12 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import CloudOffIcon from '@mui/icons-material/CloudOff';
+import { LoginContext } from "../store/login-context";
 
 function NavigationBar(){
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(()=>{
-        const isLoggedIn = localStorage.getItem("lastConnectionTime") && 
-            new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.VITE_APP_CONNECTION_EXPIRATION_TIME ;
-        setIsLoggedIn(isLoggedIn);
-    }, []);
+    const { isLoggedIn, logoutSuccessfull } = useContext(LoginContext);
 
     function logout(){
         fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/logout", {
@@ -21,8 +16,7 @@ function NavigationBar(){
         .then(response => 
             {
                 console.log(response.text());
-                localStorage.removeItem("lastConnectionTime");
-                window.location.reload();
+                logoutSuccessfull();
             });
         }
 
