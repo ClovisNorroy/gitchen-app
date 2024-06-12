@@ -6,7 +6,7 @@ import CloudOffIcon from '@mui/icons-material/CloudOff';
 import { LoginContext } from "../store/login-context";
 
 function NavigationBar(){
-    const { isLoggedIn, logoutSuccessfull } = useContext(LoginContext);
+    const { isLoggedIn, handleLogout } = useContext(LoginContext);
 
     function logout(){
         fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/logout", {
@@ -16,7 +16,7 @@ function NavigationBar(){
         .then(response => 
             {
                 console.log(response.text());
-                logoutSuccessfull();
+                handleLogout();
             });
         }
 

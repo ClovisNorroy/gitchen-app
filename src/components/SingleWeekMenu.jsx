@@ -1,8 +1,10 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { LoginContext } from "../store/login-context";
+
 
 function SingleWeekMenu(props){
-    const isLoggedIn = localStorage.getItem("lastConnectionTime") && new Date().getTime() < parseInt(localStorage.getItem("lastConnectionTime"))+import.meta.env.VITET_APP_CONNECTION_EXPIRATION_TIME ;
+    const { isLoggedIn } = useContext(LoginContext);
     const [meals, setMeals] = useState([]);
 
     function handleMealChange(event, index){
@@ -45,6 +47,7 @@ function SingleWeekMenu(props){
 
     useEffect(() => {
         if(isLoggedIn){
+            console.log("Fetching Grocery list");
             fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu", {
                 method: "GET",
                 credentials: "include"

@@ -4,7 +4,7 @@ import { checkUserIsLogged } from "../assets/helperFunctions";
 export const LoginContext = createContext({
     isLoggedIn: false,
     loginSuccessfull: () => {},
-    logoutSuccessfull: () => {}
+    handleLogout: () => {}
 })
 
 export default function LoginContextProvider({children}){
@@ -13,6 +13,8 @@ export default function LoginContextProvider({children}){
     useEffect(() => {
         if(checkUserIsLogged()){
             setIsLoggedIn(true);
+            console.log("user is logged");
+            refreshToken();
         }
     }, [])
 
@@ -21,21 +23,29 @@ export default function LoginContextProvider({children}){
         setIsLoggedIn(true);
     }
 
-    function handleLogoutSuccessfull(){
+    function handleLogout(){
         localStorage.removeItem("lastConnectionTime");
         setIsLoggedIn(false);
     }
 
     async function refreshToken(){
+        console.log("refreshing token");
         const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/token/refresh",
-            {credentials: "include"}
+            {
+                credentials: "include",
+                method: "POST"
+            }
         );
+        console.log(response.status);
+        if(response.status !== 204){
+            handleLogout();
+        }
     }
 
     const contextValue = {
         isLoggedIn: isLoggedIn,
         loginSuccessfull: handleLoginSuccessfull,
-        logoutSuccessfull: handleLogoutSuccessfull
+        handleLogout: handleLogout
     }
 
     return <LoginContext.Provider value={contextValue}>

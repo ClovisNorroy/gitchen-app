@@ -1,6 +1,5 @@
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
-import { checkUserIsLogged } from '../assets/helperFunctions';
 import {
   Box,
   Button,
@@ -12,7 +11,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { LoginContext } from '../store/login-context';
 
 //TODO: !! Use react-dnd !!
 const moveItem = (array, to, from) => {
@@ -29,9 +29,10 @@ export default function GroceryList() {
   const [isMovingtoIndex, setIsMovingToIndex] = useState(null);
   const [whatItemIsMoved, setWhatItemIsMoved] = useState({item:null, index:null});
   const newItemRef = useRef();
+  const { isLoggedIn } = useContext(LoginContext);
 
   useEffect(() => {
-    if(checkUserIsLogged()){
+    if(isLoggedIn){
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'GET'
@@ -48,7 +49,7 @@ export default function GroceryList() {
         setGroceryList([]);
       }
     }
-  }, []);
+  }, [isLoggedIn]);
 
   function saveGroceryList(){
     let upToDateGroceryList = groceryList;
@@ -59,7 +60,7 @@ export default function GroceryList() {
       newItemRef.current.value = "";
     }
 
-    if(checkUserIsLogged()){
+    if(isLoggedIn){
       console.log(groceryList);
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
