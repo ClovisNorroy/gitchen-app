@@ -5,6 +5,7 @@ import PageNotFound from './pages/PageNotFound';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Planner from './pages/Planner';
+import Home from './pages/Home';
 
 function App({children}) {
   const router = createBrowserRouter([
@@ -13,7 +14,8 @@ function App({children}) {
       element: <RootLayout />,
       errorElement: <PageNotFound />,
       children: [
-        { path: '/', element: <Planner/>},
+        { path: '/', element: <Home/>},
+        { path: '/planner', element: <Planner/>},
         { path: '/register', element: <Signup/>},
         { path: '/login', element: <Login/>}
       ]
