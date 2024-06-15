@@ -1,12 +1,11 @@
 .title{
-    margin-top: 120px;
-    color: white;
-    font-weight: bolder;
-    font-size: 10em;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+align-items: center;
 }
 
-.background{
-    background-image: url(../assets/background-homepage-EDIT.jpg);
-    background-size: 100%;
-    width: 100%;
-    }
+.link-button{
+    text-decoration: none;
+    color: white;
+}
