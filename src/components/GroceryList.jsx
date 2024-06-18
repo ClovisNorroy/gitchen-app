@@ -1,25 +1,19 @@
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
-import SwapVertIcon from '@mui/icons-material/SwapVert';
 import {
-  Box,
   Button,
-    IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   TextField,
-  Typography,
 } from "@mui/material";
 import { useContext, useEffect, useRef, useState } from "react";
 import { LoginContext } from '../store/login-context';
+import GroceryItem from './GroceryItem';
 
 export default function GroceryList() {
 
   const [groceryList, setGroceryList] = useState([]);
-  const [isMoving, setIsMoving] = useState(false);
-  const [isMovingtoIndex, setIsMovingToIndex] = useState(null);
-  const [whatItemIsMoved, setWhatItemIsMoved] = useState({item:null, index:null});
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
 
@@ -92,35 +86,13 @@ export default function GroceryList() {
   return (
     <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
       {groceryList.map((item, index) => (
-        <Box key={`box-${index}`}>
-        <ListItem key={`item-${index}`}
-        sx={{padding:0}}
-            secondaryAction={
-                <IconButton edge="end" 
-                    aria-label='move-button'
-                    onClick={() => handleMoveItem({item: item, index: index})}
-                    sx={{display: isMoving ? "none" : "block",}}>
-                    <SwapVertIcon/>
-                </IconButton>
-            }>
-          <ListItemButton sx={{padding:0}}>
-            <ListItemIcon>
-              <CheckBoxOutlineBlank
-                onClick={() => handleToggleChecked(index)}
-              />
-            </ListItemIcon>
-            <TextField
-              multiline
-              variant="standard"
-              InputProps={{ disableUnderline: true }}
-              value={item}
-              onChange={(event) => {
-                handleItemChange(event.target.value, index);
-              }}
-            />
-          </ListItemButton>
-        </ListItem>
-        </Box>
+        <GroceryItem
+          key={`grocery-item-${index}`}
+          index={index}
+          item={item}
+          handleToggleChecked={handleToggleChecked}
+          handleItemChange={handleItemChange}
+        />
       ))}
       <ListItem key="new-item" sx={{padding:0}}>
         <ListItemButton sx={{padding:0}}>
