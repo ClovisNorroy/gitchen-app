@@ -24,7 +24,7 @@ function NavigationBar(){
         <Box sx={{ flexGrow: 1}}>
             <AppBar>
                 <Toolbar id="navbar">
-                    <NavLink to="/">
+                    <NavLink to="/planner">
                         <Button variant="contained" color="secondary">Menu</Button>
                     </NavLink>
                     <div className="divider"/>

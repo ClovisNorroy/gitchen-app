@@ -14,6 +14,14 @@ import {
 import { useContext, useEffect, useRef, useState } from "react";
 import { LoginContext } from '../store/login-context';
 
+//TODO: !! Use react-dnd !!
+const moveItem = (array, to, from) => {
+    const item = array[from];
+    array.splice(from, 1);
+    array.splice(to, 0, item);
+    return array;
+};
+
 export default function GroceryList() {
 
   const [groceryList, setGroceryList] = useState([]);
@@ -66,6 +74,18 @@ export default function GroceryList() {
     }
   }
 
+  function handleChangeItemIndex(newIndex, oldIndex){
+    const oldList = [...groceryList];
+    const newList = moveItem(oldList, newIndex, oldIndex);
+    setGroceryList(newList);
+    setIsMoving(false);
+  }
+
+  function handleMoveItem(movedItem){
+    setWhatItemIsMoved(movedItem);
+    setIsMoving(true);
+  }
+
   function handleToggleChecked(itemIndex) {
     const updatedGroceryList = [...groceryList.toSpliced(itemIndex, 1)];
     setGroceryList(updatedGroceryList);
@@ -89,10 +109,24 @@ export default function GroceryList() {
     }
   }
 
+/*   function handleNewItemOnBlur() {
+      setGroceryList([...groceryList, newItemRef.current.value]);
+      console.log("OnBlur");
+      newItemRef.current.value = "";
+  } */
+
   return (
     <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
       {groceryList.map((item, index) => (
         <Box key={`box-${index}`}>
+            <ListItem
+            key={`list-move-${index}`}
+            sx={{display: isMoving ? "block" : "none"}}
+            onMouseEnter={() => setIsMovingToIndex(index)}
+            onMouseLeave={() => setIsMovingToIndex(null)}
+            onClick={() => handleChangeItemIndex(index, whatItemIsMoved.index)}>
+                <Typography>{isMovingtoIndex === index ? whatItemIsMoved.item : ''}</Typography>
+        </ListItem>
         <ListItem key={`item-${index}`}
         sx={{padding:0}}
             secondaryAction={
