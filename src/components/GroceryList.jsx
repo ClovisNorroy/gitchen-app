@@ -1,4 +1,3 @@
-import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import {
   Button,
   List,
@@ -7,17 +6,25 @@ import {
   ListItemIcon,
   TextField,
 } from "@mui/material";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import { useContext, useEffect, useRef, useState } from "react";
 import { LoginContext } from '../store/login-context';
 import GroceryItem from './GroceryItem';
 
 export default function GroceryList() {
-
-  const [groceryList, setGroceryList] = useState([]);
+  const [groceryList, setGroceryList] = useState([{id:1, item:"tomate"}, {id:2, item:"poireaux"}, {id:3, item:"PTT"}, {id:4, item:"steack"}]);
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  );
 
-  useEffect(() => {
+/*   useEffect(() => {
     if(isLoggedIn){
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
@@ -35,7 +42,7 @@ export default function GroceryList() {
         setGroceryList([]);
       }
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn]); */
 
   function saveGroceryList(){
     let upToDateGroceryList = groceryList;
@@ -83,17 +90,39 @@ export default function GroceryList() {
     }
   }
 
+  function handleDragEnd(event){
+    console.log(event);
+    const {active, over} = event;
+
+    if(active.id !== over.id){
+      setGroceryList((items) => {
+        const oldIndex = items.map(item => item.id).indexOf(active.id);
+        const newIndex = items.map(item => item.id).indexOf(over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  }
+
   return (
     <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
-      {groceryList.map((item, index) => (
-        <GroceryItem
-          key={`grocery-item-${index}`}
-          index={index}
-          item={item}
-          handleToggleChecked={handleToggleChecked}
-          handleItemChange={handleItemChange}
-        />
-      ))}
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}>
+        <SortableContext
+          items={groceryList}
+          strategy={verticalListSortingStrategy}>
+          {groceryList.map((item) => (
+            <GroceryItem
+              key={`grocery-item-${item.id}`}
+              index={item.id}
+              item={item.item}
+              handleToggleChecked={handleToggleChecked}
+              handleItemChange={handleItemChange}
+            />
+          ))}
+          </SortableContext>
+      </DndContext>
       <ListItem key="new-item" sx={{padding:0}}>
         <ListItemButton sx={{padding:0}}>
           <ListItemIcon>
