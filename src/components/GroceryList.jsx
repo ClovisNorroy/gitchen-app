@@ -47,7 +47,7 @@ export default function GroceryList() {
   }, [isLoggedIn]);
 
   function saveGroceryList(){
-    let upToDateGroceryList = groceryList;
+    const upToDateGroceryList = groceryList.map(item => item.item);
     //Save new item if not done already (No blur and no enter pressed)
     if(newItemRef.current.value !== ""){
       upToDateGroceryList = [...groceryList, newItemRef.current.value];
@@ -87,7 +87,7 @@ export default function GroceryList() {
 
   function handleNewItemKeyUp(event) {
     if (event.key === "Enter") {
-      setGroceryList([...groceryList, newItemRef.current.value]);
+      setGroceryList([...groceryList, {id: groceryList.length+1 , item:newItemRef.current.value}]);
       newItemRef.current.value = "";
     }
   }
@@ -120,7 +120,7 @@ export default function GroceryList() {
               index={item.id}
               item={item.item}
               handleToggleChecked={handleToggleChecked}
-              handleItemChange={handleItemChange}
+              //handleItemChange={handleItemChange}
             />
           ))}
           </SortableContext>
