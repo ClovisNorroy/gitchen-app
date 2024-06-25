@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   TextField,
 } from "@mui/material";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import { useContext, useEffect, useRef, useState } from "react";
@@ -14,7 +14,7 @@ import { LoginContext } from '../store/login-context';
 import GroceryItem from './GroceryItem';
 
 export default function GroceryList() {
-  const [groceryList, setGroceryList] = useState([{id:1, item:"tomate"}, {id:2, item:"poireaux"}, {id:3, item:"PTT"}, {id:4, item:"steack"}]);
+  const [groceryList, setGroceryList] = useState(null);
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
   const sensors = useSensors(
@@ -24,25 +24,27 @@ export default function GroceryList() {
     })
   );
 
-/*   useEffect(() => {
+  useEffect(() => {
     if(isLoggedIn){
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'GET'
       }).then( response => response.json())
       .then( data => {
-        setGroceryList(data.length ? data : []);
+        // id has to start at 1 for dnd-kit
+        setGroceryList(data.length ? data.map((item, index) => {return {id: index+1, item:item}}) : []);
       }
       );
     }
     else{
       if(localStorage.getItem("groceryList")){
-        setGroceryList(JSON.parse(localStorage.getItem("groceryList")));
+        const localGroceryList = JSON.parse(localStorage.getItem("groceryList"));
+        setGroceryList(localGroceryList.map((item, index) => {return {id: index, item:item}}));
       }else{
         setGroceryList([]);
       }
     }
-  }, [isLoggedIn]); */
+  }, [isLoggedIn]);
 
   function saveGroceryList(){
     let upToDateGroceryList = groceryList;
@@ -104,8 +106,8 @@ export default function GroceryList() {
   }
 
   return (
-    <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll'}}>
-    <DndContext
+    <List key="grocery-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll', overflowX: 'unset'}}>
+      {groceryList &&    <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}>
@@ -122,7 +124,9 @@ export default function GroceryList() {
             />
           ))}
           </SortableContext>
-      </DndContext>
+          <DragOverlay>
+          </DragOverlay>
+      </DndContext>}
       <ListItem key="new-item" sx={{padding:0}}>
         <ListItemButton sx={{padding:0}}>
           <ListItemIcon>
