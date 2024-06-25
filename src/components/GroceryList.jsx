@@ -47,11 +47,10 @@ export default function GroceryList() {
   }, [isLoggedIn]);
 
   function saveGroceryList(){
-    const upToDateGroceryList = groceryList.map(item => item.item);
+    const upToDateGroceryList = [...groceryList.map(itemObject => itemObject.item), {id: groceryList.length+1, item:newItemRef.current.value}];
     //Save new item if not done already (No blur and no enter pressed)
     if(newItemRef.current.value !== ""){
-      upToDateGroceryList = [...groceryList, newItemRef.current.value];
-      setGroceryList([...groceryList, newItemRef.current.value]);
+      setGroceryList(upToDateGroceryList);
       newItemRef.current.value = "";
     }
 
@@ -71,17 +70,6 @@ export default function GroceryList() {
 
   function handleToggleChecked(itemIndex) {
     const updatedGroceryList = [...groceryList.toSpliced(itemIndex, 1)];
-    setGroceryList(updatedGroceryList);
-  }
-
-  function handleItemChange(newValue, index) {
-    const updatedGroceryList = [
-      ...groceryList.map((groceryItem, groceryIndex) => {
-        if (groceryIndex === index) {
-          return newValue;
-        } else return groceryItem;
-      }),
-    ];
     setGroceryList(updatedGroceryList);
   }
 
