@@ -6,7 +6,7 @@ import {
   ListItemIcon,
   TextField,
 } from "@mui/material";
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay } from "@dnd-kit/core";
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragOverlay, MouseSensor } from "@dnd-kit/core";
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CheckBoxOutlineBlank } from '@mui/icons-material';
 import { useContext, useEffect, useRef, useState } from "react";
@@ -17,8 +17,15 @@ export default function GroceryList() {
   const [groceryList, setGroceryList] = useState(null);
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint:{
+      distance: 10
+    }
+  })
+
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    //useSensor(PointerSensor),
+    mouseSensor,
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates
     })
@@ -47,19 +54,19 @@ export default function GroceryList() {
   }, [isLoggedIn]);
 
   function saveGroceryList(){
-    const upToDateGroceryList = [...groceryList.map(itemObject => itemObject.item), {id: groceryList.length+1, item:newItemRef.current.value}];
+    let upToDateGroceryList = [...groceryList];
     //Save new item if not done already (No blur and no enter pressed)
     if(newItemRef.current.value !== ""){
+      upToDateGroceryList = [...upToDateGroceryList, { id:upToDateGroceryList.length+1, item:newItemRef.current.value}];
       setGroceryList(upToDateGroceryList);
       newItemRef.current.value = "";
     }
 
     if(isLoggedIn){
-      console.log(groceryList);
       fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
         credentials: 'include',
         method: 'POST',
-        body: JSON.stringify(upToDateGroceryList)
+        body: JSON.stringify(upToDateGroceryList.map(itemObject => itemObject.item))
       }).then( response => {
         console.log(response.text());
       });
@@ -68,9 +75,21 @@ export default function GroceryList() {
     }
   }
 
-  function handleToggleChecked(itemIndex) {
-    const updatedGroceryList = [...groceryList.toSpliced(itemIndex, 1)];
+  function handleItemChange(newValue, index) {
+    const updatedGroceryList = [
+      ...groceryList.map((groceryItem, groceryIndex) => {
+        if (groceryIndex === index) {
+          return newValue;
+        } else return groceryItem;
+      }),
+    ];
     setGroceryList(updatedGroceryList);
+  }
+
+  function handleToggleChecked(itemIdToRemove) {
+    const upToDateGroceryList = [...groceryList];
+    const indexToRemove = upToDateGroceryList.findIndex((item) => item.id === itemIdToRemove);
+    setGroceryList(upToDateGroceryList.toSpliced(indexToRemove, 1));
   }
 
   function handleNewItemKeyUp(event) {
@@ -81,7 +100,6 @@ export default function GroceryList() {
   }
 
   function handleDragEnd(event){
-    console.log(event);
     const {active, over} = event;
 
     if(active.id !== over.id){
@@ -108,7 +126,7 @@ export default function GroceryList() {
               index={item.id}
               item={item.item}
               handleToggleChecked={handleToggleChecked}
-              //handleItemChange={handleItemChange}
+              handleItemChange={handleItemChange}
             />
           ))}
           </SortableContext>
