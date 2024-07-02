@@ -17,11 +17,13 @@ export default function GroceryList() {
   const [groceryList, setGroceryList] = useState(null);
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
+  const autoSaveTimeoutRef = useRef(null);
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint:{
       distance: 10
     }
   })
+  const firstRender = useRef(true);
 
   const sensors = useSensors(
     //useSensor(PointerSensor),
@@ -30,6 +32,14 @@ export default function GroceryList() {
       coordinateGetter: sortableKeyboardCoordinates
     })
   );
+
+  useEffect(() => {
+    if(!firstRender.current){
+      saveGroceryList()
+      firstRender.current = false;
+    }
+      
+  }, [groceryList]);
 
   useEffect(() => {
     if(isLoggedIn){
@@ -54,25 +64,33 @@ export default function GroceryList() {
   }, [isLoggedIn]);
 
   function saveGroceryList(){
-    let upToDateGroceryList = [...groceryList];
-    //Save new item if not done already (No blur and no enter pressed)
-    if(newItemRef.current.value !== ""){
-      upToDateGroceryList = [...upToDateGroceryList, { id:upToDateGroceryList.length+1, item:newItemRef.current.value}];
-      setGroceryList(upToDateGroceryList);
-      newItemRef.current.value = "";
+
+    if(autoSaveTimeoutRef.current){
+      clearTimeout(autoSaveTimeoutRef.current);
+      autoSaveTimeoutRef.current = null;
     }
 
-    if(isLoggedIn){
-      fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
-        credentials: 'include',
-        method: 'POST',
-        body: JSON.stringify(upToDateGroceryList.map(itemObject => itemObject.item))
-      }).then( response => {
-        console.log(response.text());
-      });
-    }else{
-      localStorage.setItem("groceryList", JSON.stringify(upToDateGroceryList));
-    }
+    autoSaveTimeoutRef.current = setTimeout( () =>{
+      let upToDateGroceryList = [...groceryList];
+      //Save new item if not done already (No blur and no enter pressed)
+      if(newItemRef.current.value !== ""){
+        upToDateGroceryList = [...upToDateGroceryList, { id:upToDateGroceryList.length+1, item:newItemRef.current.value}];
+        setGroceryList(upToDateGroceryList);
+        newItemRef.current.value = "";
+      }
+  
+      if(isLoggedIn){
+        fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
+          credentials: 'include',
+          method: 'POST',
+          body: JSON.stringify(upToDateGroceryList.map(itemObject => itemObject.item))
+        }).then( response => {
+          console.log(response.text());
+        });
+      }else{
+        localStorage.setItem("groceryList", JSON.stringify(upToDateGroceryList));
+      }
+    }, 2000);
   }
 
   function handleItemChange(newValue, index) {
@@ -96,6 +114,7 @@ export default function GroceryList() {
     if (event.key === "Enter") {
       setGroceryList([...groceryList, {id: groceryList.length+1 , item:newItemRef.current.value}]);
       newItemRef.current.value = "";
+      saveGroceryList();
     }
   }
 
@@ -109,6 +128,7 @@ export default function GroceryList() {
         return arrayMove(items, oldIndex, newIndex);
       });
     }
+    saveGroceryList();
   }
 
   return (
@@ -147,7 +167,6 @@ export default function GroceryList() {
           />
         </ListItemButton>
       </ListItem>
-      <Button onClick={saveGroceryList}>Enregister la liste</Button>
     </List>
   );
   
