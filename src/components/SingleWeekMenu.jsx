@@ -1,11 +1,11 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { LoginContext } from "../store/login-context";
 
 
 function SingleWeekMenu(props){
     const { isLoggedIn } = useContext(LoginContext);
-    const [meals, setMeals] = useState([]);
+    const [meals, setMeals] = useState(props.initialData);
 
     function handleMealChange(event, index){
         const updatedMeals = meals.map((oldMeal, i) => {
@@ -16,15 +16,6 @@ function SingleWeekMenu(props){
             }
         });
         setMeals(updatedMeals);
-    }
-
-    function getMeal(dayNumber, mealsArray){
-        if(typeof mealsArray[dayNumber] === 'undefined'){
-            return "";
-        }
-        else{
-            return mealsArray[dayNumber];
-        }
     }
 
     function saveMenu(){
@@ -44,31 +35,6 @@ function SingleWeekMenu(props){
         localStorage.setItem("menu", JSON.stringify(emptyMenu));
         setMeals(emptyMenu);
     }
-
-    useEffect(() => {
-        if(isLoggedIn){
-            console.log("Fetching Grocery list");
-            fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu", {
-                method: "GET",
-                credentials: "include"
-            }).then(response => {return response.json();})
-            .then(data => {
-                let Menu = [];
-                data.forEach((meal, day) => {
-                    Menu.push(getMeal(day, data));
-                });
-                setMeals([...Menu]);
-            })
-        } else {
-            // Check if exist in localStorage or create empty
-            if(localStorage.getItem("menu")){
-                setMeals(JSON.parse(localStorage.getItem("menu")));
-            }
-            else {
-                setMeals(Array.apply(null, Array(14)).map(() => {return ""}));
-            }
-        }
-    }, [isLoggedIn]);
 
     const weekHeader = [<TableCell key={"weekHeader_"+props.weekNumber+"_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){

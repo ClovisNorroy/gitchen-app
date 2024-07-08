@@ -1,23 +1,22 @@
 import { TableContainer, Box, Grid, Typography, Container } from "@mui/material";
 import SingleWeekMenu from "../components/SingleWeekMenu";
 import GroceryList from "../components/GroceryList";
-import { LoginContext } from '../store/login-context';
 import { useLoaderData } from "react-router-dom";
 import { checkUserIsLogged } from "../assets/helperFunctions";
 
 export default function Planner(){
-    const groceryList = useLoaderData();
+    const plannerData = useLoaderData();
     return(
         <Grid container>
             <Grid item xs={10}>
                 <TableContainer>
-                <SingleWeekMenu key={"weekMenu_1"} weekNumber={1}/>
+                <SingleWeekMenu key={"weekMenu_1"} weekNumber={1} initialData={plannerData.menu}/>
                 </TableContainer>
             </Grid>
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
                 >Liste des courses</Typography>
-                <GroceryList initialData = {groceryList}/>
+                <GroceryList initialData = {plannerData.groceryList}/>
             </Grid>
         </Grid>
     );
@@ -42,7 +41,35 @@ export async function loader(){
         groceryList = [];
       }
     }
-
-    
-    return {groceryList : groceryList, menu:};
+    let menu;
+    if(isLoggedIn){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu", {
+            method: "GET",
+            credentials: "include"
+        });
+        const data = await response.json();
+        let Menu = [];
+        data.forEach((meal, day) => {
+            Menu.push(getMeal(day, data));
+        });
+        menu = [...Menu];
+    } else {
+        // Check if exist in localStorage or create empty
+        if(localStorage.getItem("menu")){
+            menu = JSON.parse(localStorage.getItem("menu"));
+        }
+        else {
+            menu = Array.apply(null, Array(14)).map(() => {return ""});
+        }
+    }
+    return {groceryList : groceryList, menu: menu};
   }
+
+  function getMeal(dayNumber, mealsArray){
+    if(typeof mealsArray[dayNumber] === 'undefined'){
+        return "";
+    }
+    else{
+        return mealsArray[dayNumber];
+    }
+}
