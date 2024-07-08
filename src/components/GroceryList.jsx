@@ -13,8 +13,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { LoginContext } from '../store/login-context';
 import GroceryItem from './GroceryItem';
 
-export default function GroceryList() {
-  const [groceryList, setGroceryList] = useState(null);
+export default function GroceryList({initialData}) {
+  const [groceryList, setGroceryList] = useState(initialData);
   const newItemRef = useRef();
   const { isLoggedIn } = useContext(LoginContext);
   const autoSaveTimeoutRef = useRef(null);
@@ -23,7 +23,6 @@ export default function GroceryList() {
       distance: 10
     }
   })
-  const firstRender = useRef(true);
 
   const sensors = useSensors(
     //useSensor(PointerSensor),
@@ -33,35 +32,10 @@ export default function GroceryList() {
     })
   );
 
-  useEffect(() => {
-    if(!firstRender.current){
-      saveGroceryList()
-      firstRender.current = false;
-    }
-      
-  }, [groceryList]);
-
-  useEffect(() => {
-    if(isLoggedIn){
-      fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/grocerylist",{
-        credentials: 'include',
-        method: 'GET'
-      }).then( response => response.json())
-      .then( data => {
-        // id has to start at 1 for dnd-kit
-        setGroceryList(data.length ? data.map((item, index) => {return {id: index+1, item:item}}) : []);
-      }
-      );
-    }
-    else{
-      if(localStorage.getItem("groceryList")){
-        const localGroceryList = JSON.parse(localStorage.getItem("groceryList"));
-        setGroceryList(localGroceryList.map((item, index) => {return {id: index, item:item}}));
-      }else{
-        setGroceryList([]);
-      }
-    }
-  }, [isLoggedIn]);
+  useEffect( () => {
+    if(groceryList )
+      saveGroceryList();
+  }, [groceryList])
 
   function saveGroceryList(){
 
@@ -69,9 +43,9 @@ export default function GroceryList() {
       clearTimeout(autoSaveTimeoutRef.current);
       autoSaveTimeoutRef.current = null;
     }
-
+    const upToDateGroceryList = [...groceryList];
     autoSaveTimeoutRef.current = setTimeout( () =>{
-      let upToDateGroceryList = [...groceryList];
+      
       //Save new item if not done already (No blur and no enter pressed)
       if(newItemRef.current.value !== ""){
         upToDateGroceryList = [...upToDateGroceryList, { id:upToDateGroceryList.length+1, item:newItemRef.current.value}];
@@ -114,7 +88,6 @@ export default function GroceryList() {
     if (event.key === "Enter") {
       setGroceryList([...groceryList, {id: groceryList.length+1 , item:newItemRef.current.value}]);
       newItemRef.current.value = "";
-      saveGroceryList();
     }
   }
 
@@ -122,13 +95,12 @@ export default function GroceryList() {
     const {active, over} = event;
 
     if(active.id !== over.id){
-      setGroceryList((items) => {
-        const oldIndex = items.map(item => item.id).indexOf(active.id);
-        const newIndex = items.map(item => item.id).indexOf(over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
+      setGroceryList( groceryList => {
+        const oldIndex = groceryList.map(item => item.id).indexOf(active.id);
+        const newIndex = groceryList.map(item => item.id).indexOf(over.id);
+        return arrayMove(groceryList, oldIndex, newIndex);
+      })
     }
-    saveGroceryList();
   }
 
   return (
@@ -167,6 +139,7 @@ export default function GroceryList() {
           />
         </ListItemButton>
       </ListItem>
+      <Button onClick={() => console.log(groceryList)}>log</Button>
     </List>
   );
   
