@@ -13,7 +13,6 @@ export default function LoginContextProvider({children}){
     useEffect(() => {
         if(checkUserIsLogged()){
             setIsLoggedIn(true);
-            console.log("user is logged");
             refreshToken();
         }
     }, [])
@@ -29,7 +28,6 @@ export default function LoginContextProvider({children}){
     }
 
     async function refreshToken(){
-        console.log("refreshing token");
         const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/token/refresh",
             {
                 credentials: "include",
