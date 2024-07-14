@@ -139,7 +139,6 @@ export default function GroceryList({initialData}) {
           />
         </ListItemButton>
       </ListItem>
-      <Button onClick={() => console.log(groceryList)}>log</Button>
     </List>
   );
   
