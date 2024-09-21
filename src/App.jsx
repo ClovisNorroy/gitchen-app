@@ -10,6 +10,8 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
+import Recipes from './pages/Recipes';
+import Recipe from './pages/Recipe';
 
 function App({children}) {
   const router = createBrowserRouter([
@@ -21,7 +23,9 @@ function App({children}) {
         { path: '/', element: <Home/>},
         { path: '/planner', element: <Planner/>, loader: groceryLoader},
         { path: '/register', element: <Signup/>},
-        { path: '/login', element: <Login/>}
+        { path: '/login', element: <Login/>},
+        { path: '/recipes', element: <Recipes/>},
+        { path: '/recipe', element: <Recipe/>}
       ]
     }
   ])
