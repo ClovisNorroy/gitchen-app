@@ -12,8 +12,6 @@ export default function Planner(){
     const autoSaveTimeoutRef = useRef(null);
 
     function saveGroceryList(groceryList, setGroceryList, newItemRef){
-        console.log(groceryList);
-        return;
 
         if(autoSaveTimeoutRef.current){
           clearTimeout(autoSaveTimeoutRef.current);
