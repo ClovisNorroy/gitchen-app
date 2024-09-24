@@ -44,7 +44,6 @@ export default function SortableList({initialData, saveList}) {
         } else return sortableItem;
       }),
     ];
-    console.log(updatedSortableList);
     setSortableList(updatedSortableList);
   }
 

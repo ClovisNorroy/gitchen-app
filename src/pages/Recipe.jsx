@@ -7,32 +7,33 @@ import { useState } from "react";
 export default function Recipe(){
     const {state} = useLocation();
     const {recipe} = state;
-    console.log(state);
     const [ingredients, setIngredients] = useState(recipe.ingredients);
     const [instructions, setInstructions] = useState(recipe.instructions);
     const keysIngredientsList = makeListKeys(recipe.ingredients.length);
     const keysInstructionsList = makeListKeys(recipe.instructions.length);
 
     async function saveRecipe(){
+        let ingredientArray = ingredients.map( (ingredientObject) =>  ingredientObject.item);
         const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/recipe",
             {
                 method: "POST",
                 credentials: "include",
-                body: JSON.stringify({title: recipe.title, ingredients: recipe.ingredients.join(";"), instructions: recipe.instructions.join(";")})
+                body: JSON.stringify({title: recipe.title, ingredients: ingredientArray.join(";"), instructions: recipe.instructions.join(";")})
             }
         )
         console.log(response.status);
     }
 
-    async function saveIngredients(ingredientList, newItemRef){
-            let upToDateIngredientList = [...ingredientList];
-            //Save new item if not done already (No blur and no enter pressed)
-            if(newItemRef.current.value !== ""){
-              upToDateGroceryList = [...upToDateGroceryList, { id:upToDateGroceryList.length+1, item:newItemRef.current.value}];
-              setGroceryList(upToDateGroceryList);
-              newItemRef.current.value = "";
-            }
-            setIngredients(ingredientList);
+    async function saveIngredients(ingredientList, setSortableIngredients, newItemRef){
+        let upToDateIngredientList = [...ingredientList];
+        //Save new item if not done already (No blur and no enter pressed)
+        if(newItemRef.current.value !== ""){
+            upToDateIngredientList = [...upToDateIngredientList, { id:upToDateIngredientList.length+1, item:newItemRef.current.value}];
+            setSortableIngredients(upToDateIngredientList);
+            newItemRef.current.value = "";
+        }
+        setIngredients(upToDateIngredientList);
+        console.log(ingredientList);
     }
 
     return(
