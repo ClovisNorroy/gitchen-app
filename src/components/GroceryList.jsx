@@ -43,7 +43,7 @@ export default function GroceryList({initialData}) {
       clearTimeout(autoSaveTimeoutRef.current);
       autoSaveTimeoutRef.current = null;
     }
-    const upToDateGroceryList = [...groceryList];
+    let upToDateGroceryList = [...groceryList];
     autoSaveTimeoutRef.current = setTimeout( () =>{
       
       //Save new item if not done already (No blur and no enter pressed)

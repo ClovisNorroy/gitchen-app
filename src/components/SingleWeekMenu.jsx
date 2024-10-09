@@ -62,6 +62,7 @@ function SingleWeekMenu(props){
                 inputProps={{maxLength: 50}}
                 onChange={(event) => {handleMealChange(event, dayNumber)}}
                 value={meal}
+                onFocus={event => event.target.select()}
                 />
             </TableCell>
             )
@@ -79,6 +80,7 @@ function SingleWeekMenu(props){
                     inputProps={{maxLength: 50}}
                     onChange={(event) => {handleMealChange(event, dayNumber+7)}}
                     value={meal}
+                    onFocus={event => event.target.select()}
                     />
                 </TableCell>
                 )
