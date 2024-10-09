@@ -1,11 +1,17 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useState,useRef, useEffect } from "react";
 import { LoginContext } from "../store/login-context";
 
 
 function SingleWeekMenu(props){
     const { isLoggedIn } = useContext(LoginContext);
     const [meals, setMeals] = useState(props.initialData);
+    const autoSaveTimeoutRef = useRef(null);
+
+    useEffect( () => {
+        if(meals)
+            saveMenu();
+      }, [meals])
 
     function handleMealChange(event, index){
         const updatedMeals = meals.map((oldMeal, i) => {
@@ -19,15 +25,21 @@ function SingleWeekMenu(props){
     }
 
     function saveMenu(){
-        if(isLoggedIn){
-            fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu/save", {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify(meals)
-            }).then(response => {return response.text();})
-        } else {
-            localStorage.setItem("menu", JSON.stringify(meals));
+        if(autoSaveTimeoutRef.current){
+            clearTimeout(autoSaveTimeoutRef.current);
+            autoSaveTimeoutRef.current = null;
         }
+        autoSaveTimeoutRef.current = setTimeout( () =>{
+            if(isLoggedIn){
+                fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu/save", {
+                    method: "POST",
+                    credentials: "include",
+                    body: JSON.stringify(meals)
+                }).then(response => {return response.text();})
+            } else {
+                localStorage.setItem("menu", JSON.stringify(meals));
+            }
+        }, 4000);
     }
 
     function resetMenu(){
@@ -88,7 +100,6 @@ function SingleWeekMenu(props){
             </TableRow>
         </TableBody>
     </Table>
-    <Button onClick={saveMenu}>Enregister</Button>
     <Button onClick={resetMenu}>Réinitialiser</Button>
     </Box>
     )

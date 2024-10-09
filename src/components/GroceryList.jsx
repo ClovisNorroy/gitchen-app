@@ -33,7 +33,7 @@ export default function GroceryList({initialData}) {
   );
 
   useEffect( () => {
-    if(groceryList )
+    if(groceryList)
       saveGroceryList();
   }, [groceryList])
 
