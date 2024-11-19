@@ -18,7 +18,7 @@ export default function Login() {
       body: JSON.stringify({ username: usernameRef.current.value, password: passwordRef.current.value }),
       headers: { "Content-Type": "application/json"}
     }).then(response => { console.log(response); return response; }).then(data => {
-      if(data.status === 204){
+      if(data.status === 200){
         loginSuccessfull();
         navigate("/");
       }
