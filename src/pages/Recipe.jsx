@@ -18,7 +18,12 @@ export default function Recipe(){
             {
                 method: "POST",
                 credentials: "include",
-                body: JSON.stringify({title: recipe.title, ingredients: ingredientArray.join(";"), instructions: recipe.instructions.join(";")})
+                body: JSON.stringify({
+                    title: recipe.title,
+                    ingredients: ingredientArray.join(";"),
+                    instructions: recipe.instructions.join(";"),
+                    image: recipe.image
+                })
             }
         )
         console.log(response.status);
