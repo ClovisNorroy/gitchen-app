@@ -1,11 +1,24 @@
 import { Button, Stack, TextField } from "@mui/material"
 import RecipeCard from "../components/RecipeCard";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Recipes(){
     const recipeURL = useRef();
     const navigate = useNavigate();
+    const [recipes, setRecipes] = useState([]);
+
+    async function loadRecipes(){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+'/api/recipes',
+            {
+                method: 'GET',
+                credentials: 'include'
+            }
+        );
+        const recipes = await response.json();
+        setRecipes(recipes);
+    }
+
     async function scrape(){
 
         console.log(recipeURL.current.value);
@@ -28,8 +41,9 @@ export default function Recipes(){
         <>
         <TextField inputRef={recipeURL}/>
         <Button onClick={scrape}>Scrape Recipe</Button>
+        <Button onClick={loadRecipes}>Load Recipes</Button>
             <Stack direction="row">
-                {DUMMY_RECIPE.map( recipe => <RecipeCard key={recipe.title} ingredients={recipe.ingredients}/>)}
+                {recipes.map( recipe => <RecipeCard key={recipe.id} image={recipe.image_mini} ingredients={recipe.ingredients}/>)}
             </Stack>
         </>
 

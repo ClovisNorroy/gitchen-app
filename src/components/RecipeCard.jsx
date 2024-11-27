@@ -1,11 +1,11 @@
 import { Card, CardContent, CardMedia, List, ListItem } from "@mui/material";
 
-export default function RecipeCard({ingredients}){
+export default function RecipeCard({ingredients, image}){
     return(
         <Card sx={{height: 220}}>
             <CardMedia
             sx={{ height: 140}}
-                image={"src/assets/burger-with-melted-cheese.jpg"}
+                image={`data:image/png;base64, ${image}`}
                 title="burger"
             />
             <CardContent>
