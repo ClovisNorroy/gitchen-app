@@ -1,10 +1,11 @@
-import { TableContainer, Box, Grid, Typography, Container } from "@mui/material";
+import { TableContainer, Box, Grid, Typography, Container, Stack } from "@mui/material";
 import SingleWeekMenu from "../components/SingleWeekMenu";
 import { useLoaderData } from "react-router-dom";
 import { checkUserIsLogged } from "../assets/helperFunctions";
 import { LoginContext } from '../store/login-context';
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import SortableList from "../components/SortableList";
+import Recipes from "./Recipes";
 
 export default function Planner(){
     const plannerData = useLoaderData();
@@ -48,6 +49,12 @@ export default function Planner(){
                 <TableContainer>
                 <SingleWeekMenu key={"weekMenu_1"} weekNumber={1} initialData={plannerData.menu}/>
                 </TableContainer>
+                <Box>
+                  <Stack>
+                    <Recipes>
+                    </Recipes>
+                  </Stack>
+                </Box>
             </Grid>
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
@@ -109,4 +116,3 @@ export async function loader(){
         return mealsArray[dayNumber];
     }
 }
-
