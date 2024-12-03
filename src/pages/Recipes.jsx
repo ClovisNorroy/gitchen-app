@@ -1,11 +1,24 @@
-import { Button, Stack, TextField } from "@mui/material"
+import { Button, Container, Stack, TextField, Box, Drawer } from "@mui/material"
 import RecipeCard from "../components/RecipeCard";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Recipes(){
     const recipeURL = useRef();
     const navigate = useNavigate();
+    const [recipes, setRecipes] = useState([]);
+
+    async function loadRecipes(){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+'/api/recipes',
+            {
+                method: 'GET',
+                credentials: 'include'
+            }
+        );
+        const recipes = await response.json();
+        setRecipes(recipes);
+    }
+
     async function scrape(){
 
         console.log(recipeURL.current.value);
@@ -21,17 +34,28 @@ export default function Recipes(){
         navigate("/recipe", {state :{recipe : recipeData}});
 
     }
-    //Fetch Recipe
-    const DUMMY_RECIPE = [{title:"mousse", ingredients: ["250g chocolat", "3 oeufs", "20g sucre"], instructions: ["un", "deux", "trois"]}, 
-    {title:"charlotte", ingredients: ["250g fraises", "biscuits", "3 oeufs"], instructions: ["prems", "deuz", "troiz"]}];
+
+    useEffect( () => {
+        loadRecipes();
+    }, [])
+
     return(
-        <>
-        <TextField inputRef={recipeURL}/>
-        <Button onClick={scrape}>Scrape Recipe</Button>
-            <Stack direction="row">
-                {DUMMY_RECIPE.map( recipe => <RecipeCard key={recipe.title} ingredients={recipe.ingredients}/>)}
+        <Container>
+            <Drawer variant='permanent'>
+                <Button variant='outlined'>Nouvelle recette</Button>
+            </Drawer>
+        <Box sx={{marginBottom:4}}>
+        
+        <TextField inputRef={recipeURL} label='Télécharger une recette' size='small' sx={{width:975}}/>
+        <Button onClick={scrape} variant='contained' sx={{marginLeft: 2}}>Copier une recette</Button>
+        </Box>
+        <Box>
+                        <Stack direction="row">
+                {recipes.map( recipe => <RecipeCard key={recipe.id} image={recipe.image_mini} name={recipe.name}/>)}
             </Stack>
-        </>
+        </Box>
+
+        </Container>
 
     )
 }

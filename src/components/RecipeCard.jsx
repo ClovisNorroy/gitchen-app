@@ -1,17 +1,16 @@
-import { Card, CardContent, CardMedia, List, ListItem } from "@mui/material";
+import { Card, CardContent, CardMedia, List, ListItem, Typography } from "@mui/material";
 
-export default function RecipeCard({ingredients}){
+export default function RecipeCard({name, image}){
     return(
-        <Card sx={{height: 220}}>
+        <Card sx={{width: 225, marginRight: 3, height: 330}}>
             <CardMedia
-            sx={{ height: 140}}
-                image={"src/assets/burger-with-melted-cheese.jpg"}
-                title="burger"
+            sx={{ height: 225, width: 225}}
+                image={`data:image/png;base64, ${image}`}
+                title={name}
             />
             <CardContent>
-                <List>
-                    {ingredients.map( (ingredient, index) => <ListItem key={`${index}-${ingredient}`}>{ingredient}</ListItem>)}
-                </List>
+                <Typography
+                sx={{textWrap: 'wrap'}} align='center'>{name}</Typography>
             </CardContent>
         </Card>
     )

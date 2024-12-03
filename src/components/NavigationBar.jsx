@@ -27,6 +27,9 @@ function NavigationBar(){
                     <NavLink to="/planner">
                         <Button variant="contained" color="secondary">Menu</Button>
                     </NavLink>
+                    <NavLink to="/recipes">
+                        <Button variant="contained" color="secondary">Recettes</Button>
+                    </NavLink>
                     <div className="divider"/>
                     <Box sx={{width: 300}} className={isLoggedIn ? 'hidden-button' : undefined}>
                         <Typography><CloudOffIcon/>  Vous êtes hors ligne</Typography>

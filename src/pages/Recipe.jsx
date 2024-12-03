@@ -18,7 +18,12 @@ export default function Recipe(){
             {
                 method: "POST",
                 credentials: "include",
-                body: JSON.stringify({title: recipe.title, ingredients: ingredientArray.join(";"), instructions: recipe.instructions.join(";")})
+                body: JSON.stringify({
+                    title: recipe.title,
+                    ingredients: ingredientArray.join(";"),
+                    instructions: recipe.instructions.join(";"),
+                    image: recipe.image
+                })
             }
         )
         console.log(response.status);
@@ -39,6 +44,7 @@ export default function Recipe(){
     return(
         <Box>
             <Typography variant="h3">{recipe.title}</Typography>
+            <img src={`data:image/jpeg;base64,${recipe.image}`}/>
             <SortableList initialData={ingredients} saveList={saveIngredients}/>
             <List id="instructions_list">
                 {instructions.map( (instruction, index) => <ListItem key={keysInstructionsList[index]}>{instruction}</ListItem>)}
