@@ -3,7 +3,7 @@ import RecipeCard from "../components/RecipeCard";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Recipes(){
+export default function Recipes({displayMode = "Full"}){
     const recipeURL = useRef();
     const navigate = useNavigate();
     const [recipes, setRecipes] = useState([]);
@@ -16,6 +16,7 @@ export default function Recipes(){
             }
         );
         const recipes = await response.json();
+        //console.log(recipes);
         setRecipes(recipes);
     }
 
@@ -41,16 +42,16 @@ export default function Recipes(){
 
     return(
         <Container>
-            <Drawer variant='permanent'>
+{/*             <Drawer variant='permanent'>
                 <Button variant='outlined'>Nouvelle recette</Button>
-            </Drawer>
-        <Box sx={{marginBottom:4}}>
+            </Drawer> */}
+        {displayMode=="Full" && <Box sx={{marginBottom:4}}>
         
         <TextField inputRef={recipeURL} label='Télécharger une recette' size='small' sx={{width:975}}/>
         <Button onClick={scrape} variant='contained' sx={{marginLeft: 2}}>Copier une recette</Button>
-        </Box>
+        </Box>}
         <Box>
-                        <Stack direction="row">
+            <Stack direction="row">
                 {recipes.map( recipe => <RecipeCard key={recipe.id} image={recipe.image_mini} name={recipe.name}/>)}
             </Stack>
         </Box>

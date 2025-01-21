@@ -51,11 +51,11 @@ export default function Planner(){
                 </TableContainer>
                 <Box>
                   <Stack>
-                    <Recipes>
-                    </Recipes>
+                    <Recipes displayMode={"bottomPanel"}/>
                   </Stack>
                 </Box>
             </Grid>
+            {/* Right Side Panel: Grocery List */}
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
                 >Liste des courses</Typography>
