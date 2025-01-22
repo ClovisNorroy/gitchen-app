@@ -1,7 +1,7 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 import { useContext, useState,useRef, useEffect } from "react";
 import { LoginContext } from "../store/login-context";
-
+import SingleDayMenu from "./SingleDayMenu";
 
 function SingleWeekMenu(props){
     const { isLoggedIn } = useContext(LoginContext);
@@ -64,39 +64,35 @@ function SingleWeekMenu(props){
         <TableBody>
             <TableRow>
             <TableCell>Midi</TableCell>
-            {// meals.map( (meal, dayNumber) => {return <SingleDayMenu key={"day"+dayNumber} meal={meal} />})
-            meals.slice(0, 7).map( (meal, dayNumber) => {return (
-            <TableCell key={"lunch_"+dayNumber}>
-                <TextField
-                multiline
-                rows={2}
-                fullWidth
-                inputProps={{maxLength: 50}}
-                onChange={(event) => {handleMealChange(event, dayNumber)}}
-                value={meal}
-                onFocus={event => event.target.select()}
-                />
-            </TableCell>
-            )
-            })}
+            {
+                meals.slice(0, 7).map( (meal, dayNumber) => {
+                    return(
+                        <SingleDayMenu
+                            key={"lunch_"+dayNumber}
+                            initMeal={meal}
+                            onMealChange={handleMealChange}
+                            dayNumber={dayNumber}
+                            lunchOrDiner={"lunch"}
+                        />
+                    )
+                })
+            }
             </TableRow>
             <TableRow>
                 <TableCell>Soir</TableCell>
-            {// meals.map( (meal, dayNumber) => {return <SingleDayMenu key={"day"+dayNumber} meal={meal} />})
-            meals.slice(7, 14).map( (meal, dayNumber) => {return (
-                <TableCell key={"lunch_"+dayNumber}>
-                    <TextField
-                    multiline
-                    rows={2}
-                    fullWidth
-                    inputProps={{maxLength: 50}}
-                    onChange={(event) => {handleMealChange(event, dayNumber+7)}}
-                    value={meal}
-                    onFocus={event => event.target.select()}
-                    />
-                </TableCell>
-                )
-                })}
+                {
+                meals.slice(7, 14).map( (meal, dayNumber) => {
+                    return(
+                        <SingleDayMenu
+                            key={"diner"+dayNumber}
+                            initMeal={meal}
+                            onMealChange={handleMealChange}
+                            dayNumber={dayNumber}
+                            lunchOrDiner={"diner"}
+                        />
+                    )
+                })
+            }
             </TableRow>
         </TableBody>
     </Table>
