@@ -3,7 +3,8 @@ import { useContext, useState,useRef, useEffect } from "react";
 import { LoginContext } from "../store/login-context";
 import SingleDayMenu from "./SingleDayMenu";
 
-function SingleWeekMenu(props){
+export default function Menu(props){
+    console.log(props.initialData);
     const { isLoggedIn } = useContext(LoginContext);
     const [meals, setMeals] = useState(props.initialData);
     const autoSaveTimeoutRef = useRef(null);
@@ -48,9 +49,9 @@ function SingleWeekMenu(props){
         setMeals(emptyMenu);
     }
 
-    const weekHeader = [<TableCell key={"weekHeader_"+props.weekNumber+"_day_0"}></TableCell>];
+    const weekHeader = [<TableCell key={"weekHeader_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){
-        weekHeader.push(<TableCell key={"weekHeader_"+props.weekNumber+"_day_"+day}>{'Jour '+ day}</TableCell>);
+        weekHeader.push(<TableCell key={"weekHeader_day_"+day}>{'Jour '+ day}</TableCell>);
     }
 
     return (
@@ -69,7 +70,7 @@ function SingleWeekMenu(props){
                     return(
                         <SingleDayMenu
                             key={"lunch_"+dayNumber}
-                            initMeal={meal}
+                            meal={meal}
                             onMealChange={handleMealChange}
                             dayNumber={dayNumber}
                             lunchOrDiner={"lunch"}
@@ -85,7 +86,7 @@ function SingleWeekMenu(props){
                     return(
                         <SingleDayMenu
                             key={"diner"+dayNumber}
-                            initMeal={meal}
+                            meal={meal}
                             onMealChange={handleMealChange}
                             dayNumber={dayNumber}
                             lunchOrDiner={"diner"}
@@ -100,5 +101,3 @@ function SingleWeekMenu(props){
     </Box>
     )
 }
-
-export default SingleWeekMenu;
