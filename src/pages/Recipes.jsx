@@ -52,7 +52,7 @@ export default function Recipes({displayMode = "Full"}){
         </Box>}
         <Box>
             <Stack direction="row">
-                {recipes.map( recipe => <RecipeCard key={recipe.id} image={recipe.image_mini} name={recipe.name}/>)}
+                {recipes.map( (recipe, index) => <RecipeCard id={index} key={recipe.id} image={recipe.image_mini} name={recipe.name}/>)}
             </Stack>
         </Box>
 

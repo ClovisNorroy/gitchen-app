@@ -1,16 +1,24 @@
 import { TableContainer, Box, Grid, Typography, Container, Stack } from "@mui/material";
-import SingleWeekMenu from "../components/SingleWeekMenu";
+import Menu from "../components/Menu";
 import { useLoaderData } from "react-router-dom";
 import { checkUserIsLogged } from "../assets/helperFunctions";
 import { LoginContext } from '../store/login-context';
 import { useContext, useEffect, useRef, useState } from "react";
 import SortableList from "../components/SortableList";
 import Recipes from "./Recipes";
+import { DndContext } from "@dnd-kit/core";
+//import {Draggable} from './Draggable';
 
 export default function Planner(){
     const plannerData = useLoaderData();
     const { isLoggedIn } = useContext(LoginContext);
     const autoSaveTimeoutRef = useRef(null);
+
+    function handleDragEnd(event){
+      console.log(event.over);
+/*       const {over} = event;
+      setParent(over ? over.id : null); */
+    }
 
     function saveGroceryList(groceryList, setGroceryList, newItemRef){
 
@@ -45,16 +53,19 @@ export default function Planner(){
 
     return(
         <Grid container>
+          <DndContext onDragEnd={handleDragEnd}>
             <Grid item xs={10}>
-                <TableContainer>
-                <SingleWeekMenu key={"weekMenu_1"} weekNumber={1} initialData={plannerData.menu}/>
-                </TableContainer>
-                <Box>
-                  <Stack>
-                    <Recipes displayMode={"bottomPanel"}/>
-                  </Stack>
-                </Box>
+              <TableContainer>
+                <Menu initialData={plannerData.menu}/>
+              </TableContainer>
+              <Box>
+                <Stack>
+                  <Recipes displayMode={"bottomPanel"}/>
+                </Stack>
+              </Box>
             </Grid>
+          </DndContext>
+
             {/* Right Side Panel: Grocery List */}
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
