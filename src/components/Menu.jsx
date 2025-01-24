@@ -1,53 +1,7 @@
 import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
-import { useContext, useState,useRef, useEffect } from "react";
-import { LoginContext } from "../store/login-context";
-import SingleDayMenu from "./SingleDayMenu";
+import Droppable from "./Droppable";
 
-export default function Menu(props){
-    console.log(props.initialData);
-    const { isLoggedIn } = useContext(LoginContext);
-    const [meals, setMeals] = useState(props.initialData);
-    const autoSaveTimeoutRef = useRef(null);
-
-    useEffect( () => {
-        if(meals)
-            saveMenu();
-      }, [meals])
-
-    function handleMealChange(event, index){
-        const updatedMeals = meals.map((oldMeal, i) => {
-            if( i === index ){
-                return event.target.value;
-            }else {
-                return oldMeal;
-            }
-        });
-        setMeals(updatedMeals);
-    }
-
-    function saveMenu(){
-        if(autoSaveTimeoutRef.current){
-            clearTimeout(autoSaveTimeoutRef.current);
-            autoSaveTimeoutRef.current = null;
-        }
-        autoSaveTimeoutRef.current = setTimeout( () =>{
-            if(isLoggedIn){
-                fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu/save", {
-                    method: "POST",
-                    credentials: "include",
-                    body: JSON.stringify(meals)
-                }).then(response => {return response.text();})
-            } else {
-                localStorage.setItem("menu", JSON.stringify(meals));
-            }
-        }, 4000);
-    }
-
-    function resetMenu(){
-        const emptyMenu = Array.apply(null, Array(14)).map(() => {return ""});
-        localStorage.setItem("menu", JSON.stringify(emptyMenu));
-        setMeals(emptyMenu);
-    }
+export default function Menu({meals, handleMealChange, resetMenu}){
 
     const weekHeader = [<TableCell key={"weekHeader_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){
@@ -66,31 +20,45 @@ export default function Menu(props){
             <TableRow>
             <TableCell>Midi</TableCell>
             {
-                meals.slice(0, 7).map( (meal, dayNumber) => {
-                    return(
-                        <SingleDayMenu
-                            key={"lunch_"+dayNumber}
-                            meal={meal}
-                            onMealChange={handleMealChange}
-                            dayNumber={dayNumber}
-                            lunchOrDiner={"lunch"}
-                        />
-                    )
+                meals.slice(0, 7).map( (meal, mealNumber) => {
+                    return (
+                      <Droppable key={"droppable" + mealNumber} id={mealNumber}>
+                          <TextField
+                            multiline
+                            rows={2}
+                            fullWidth
+                            inputProps={{ maxLength: 50 }}
+                            onChange={(event) => {
+                                handleMealChange(event, mealNumber);
+                            }}
+                            value={meal}
+                            onFocus={(event) => event.target.select()}
+                          />
+                      </Droppable>
+                    );
                 })
             }
             </TableRow>
             <TableRow>
                 <TableCell>Soir</TableCell>
                 {
-                meals.slice(7, 14).map( (meal, dayNumber) => {
+                meals.slice(7, 14).map( (meal, mealNumber) => {
                     return(
-                        <SingleDayMenu
-                            key={"diner"+dayNumber}
-                            meal={meal}
-                            onMealChange={handleMealChange}
-                            dayNumber={dayNumber}
-                            lunchOrDiner={"diner"}
-                        />
+                        <Droppable key={"droppable" + mealNumber+7} id={mealNumber+7}>
+                        <TableCell key={"tableCell_" + mealNumber+7} >
+                          <TextField
+                            multiline
+                            rows={2}
+                            fullWidth
+                            inputProps={{ maxLength: 50 }}
+                            onChange={(event) => {
+                                handleMealChange(event, mealNumber+7);
+                            }}
+                            value={meal}
+                            onFocus={(event) => event.target.select()}
+                          />
+                        </TableCell>
+                      </Droppable>
                     )
                 })
             }

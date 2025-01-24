@@ -7,18 +7,59 @@ import { useContext, useEffect, useRef, useState } from "react";
 import SortableList from "../components/SortableList";
 import Recipes from "./Recipes";
 import { DndContext } from "@dnd-kit/core";
-//import {Draggable} from './Draggable';
 
 export default function Planner(){
     const plannerData = useLoaderData();
     const { isLoggedIn } = useContext(LoginContext);
     const autoSaveTimeoutRef = useRef(null);
+    const [meals, setMeals] = useState(plannerData.menu);
+
+
+    useEffect( () => {
+      if(meals)
+          saveMenu();
+    }, [meals])
 
     function handleDragEnd(event){
       console.log(event.over);
 /*       const {over} = event;
       setParent(over ? over.id : null); */
     }
+
+  function handleMealChange(event, index){
+      const updatedMeals = meals.map((oldMeal, i) => {
+          if( i === index ){
+              return event.target.value;
+          }else {
+              return oldMeal;
+          }
+      });
+      setMeals(updatedMeals);
+  }
+
+  function saveMenu(){
+      if(autoSaveTimeoutRef.current){
+          clearTimeout(autoSaveTimeoutRef.current);
+          autoSaveTimeoutRef.current = null;
+      }
+      autoSaveTimeoutRef.current = setTimeout( () =>{
+          if(isLoggedIn){
+              fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/menu/save", {
+                  method: "POST",
+                  credentials: "include",
+                  body: JSON.stringify(meals)
+              }).then(response => {return response.text();})
+          } else {
+              localStorage.setItem("menu", JSON.stringify(meals));
+          }
+      }, 4000);
+  }
+
+  function resetMenu(){
+      const emptyMenu = Array.apply(null, Array(14)).map(() => {return ""});
+      localStorage.setItem("menu", JSON.stringify(emptyMenu));
+      setMeals(emptyMenu);
+  }
 
     function saveGroceryList(groceryList, setGroceryList, newItemRef){
 
@@ -56,7 +97,7 @@ export default function Planner(){
           <DndContext onDragEnd={handleDragEnd}>
             <Grid item xs={10}>
               <TableContainer>
-                <Menu initialData={plannerData.menu}/>
+                <Menu handleMealChange={handleMealChange} resetMenu={resetMenu} meals={meals}/>
               </TableContainer>
               <Box>
                 <Stack>
