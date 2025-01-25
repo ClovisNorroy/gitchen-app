@@ -29,7 +29,7 @@ export default function Menu({meals, handleMealChange, resetMenu}){
                             fullWidth
                             inputProps={{ maxLength: 50 }}
                             onChange={(event) => {
-                                handleMealChange(event, mealNumber);
+                                handleMealChange(event.target.value, mealNumber);
                             }}
                             value={meal}
                             onFocus={(event) => event.target.select()}
@@ -52,7 +52,7 @@ export default function Menu({meals, handleMealChange, resetMenu}){
                             fullWidth
                             inputProps={{ maxLength: 50 }}
                             onChange={(event) => {
-                                handleMealChange(event, mealNumber+7);
+                                handleMealChange(event.target.value, mealNumber+7);
                             }}
                             value={meal}
                             onFocus={(event) => event.target.select()}

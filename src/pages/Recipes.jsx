@@ -68,6 +68,7 @@ export default function Recipes({ displayMode = "Full" }) {
               key={recipe.id}
               image={recipe.image_mini}
               name={recipe.name}
+              ingredients={recipe.ingredients}
             />
           ))}
         </Stack>

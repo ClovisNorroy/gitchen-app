@@ -21,15 +21,14 @@ export default function Planner(){
     }, [meals])
 
     function handleDragEnd(event){
-      console.log(event.over);
-/*       const {over} = event;
-      setParent(over ? over.id : null); */
+      const { active, over } = event;
+      handleMealChange(active.data.current.name, over.id);
     }
 
-  function handleMealChange(event, index){
+  function handleMealChange(newValue, index){
       const updatedMeals = meals.map((oldMeal, i) => {
           if( i === index ){
-              return event.target.value;
+              return newValue;
           }else {
               return oldMeal;
           }

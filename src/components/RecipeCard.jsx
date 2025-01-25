@@ -2,10 +2,10 @@ import { useDraggable } from "@dnd-kit/core";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function RecipeCard({name, image, id}){
+export default function RecipeCard({name, image, id, ingredients}){
     const {attributes, listeners, setNodeRef, transform} = useDraggable({
         id: id,
-        data: {ingredients: "oui"}
+        data: {ingredients: ingredients, name: name}
     });
 
     const style = {
