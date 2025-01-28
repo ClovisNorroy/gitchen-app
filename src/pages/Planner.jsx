@@ -13,6 +13,7 @@ export default function Planner(){
     const { isLoggedIn } = useContext(LoginContext);
     const autoSaveTimeoutRef = useRef(null);
     const [meals, setMeals] = useState(plannerData.menu);
+    const [groceryList, setGroceryList] = useState(plannerData.groceryList.length ? plannerData.groceryList.map((item, index) => {return {id: index+1, item:item}}) : [])
 
 
     useEffect( () => {
@@ -23,6 +24,12 @@ export default function Planner(){
     function handleDragEnd(event){
       const { active, over } = event;
       handleMealChange(active.data.current.name, over.id);
+      addGroceries(active.data.current.ingredients);
+    }
+
+    function addGroceries(groceries){
+      const groceriesToAdd = groceries.map( (item, index) => { return {id: index+groceryList.length+1, item: item} });
+      setGroceryList([...groceryList, ...groceriesToAdd]);
     }
 
   function handleMealChange(newValue, index){
@@ -110,7 +117,7 @@ export default function Planner(){
             <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
                 >Liste des courses</Typography>
-                <SortableList initialData={plannerData.groceryList} saveList={saveGroceryList}/>
+                <SortableList sortableList={groceryList} setSortableList={setGroceryList} saveList={saveGroceryList}/>
             </Grid>
         </Grid>
     );

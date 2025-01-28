@@ -45,7 +45,6 @@ export default function Menu({meals, handleMealChange, resetMenu}){
                 meals.slice(7, 14).map( (meal, mealNumber) => {
                     return(
                         <Droppable key={"droppable" + mealNumber+7} id={mealNumber+7}>
-                        <TableCell key={"tableCell_" + mealNumber+7} >
                           <TextField
                             multiline
                             rows={2}
@@ -57,7 +56,6 @@ export default function Menu({meals, handleMealChange, resetMenu}){
                             value={meal}
                             onFocus={(event) => event.target.select()}
                           />
-                        </TableCell>
                       </Droppable>
                     )
                 })

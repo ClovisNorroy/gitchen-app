@@ -13,8 +13,8 @@ import { useEffect, useRef, useState } from "react";
 
 import SortableItem from './SortableItem';
 
-export default function SortableList({initialData, saveList}) {
-  const [sortableList, setSortableList] = useState(initialData.length ? initialData.map((item, index) => {return {id: index+1, item:item}}) : []);
+export default function SortableList({sortableList, setSortableList, saveList}) {
+  //const [sortableList, setSortableList] = useState(initialData.length ? initialData.map((item, index) => {return {id: index+1, item:item}}) : []);
   const newItemRef = useRef();
 
   const mouseSensor = useSensor(MouseSensor, {
