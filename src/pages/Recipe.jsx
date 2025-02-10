@@ -45,7 +45,7 @@ export default function Recipe(){
         <Box>
             <Typography variant="h3">{recipe.title}</Typography>
             <img src={`data:image/jpeg;base64,${recipe.image}`}/>
-            <SortableList initialData={ingredients} saveList={saveIngredients}/>
+            <SortableList sortableList={ingredients} setSortableList={setIngredients} saveList={saveIngredients}/>
             <List id="instructions_list">
                 {instructions.map( (instruction, index) => <ListItem key={keysInstructionsList[index]}>{instruction}</ListItem>)}
             </List>

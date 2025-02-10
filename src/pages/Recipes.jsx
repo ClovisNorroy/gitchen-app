@@ -29,7 +29,7 @@ export default function Recipes({ displayMode = "Full" }) {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
-          URL: "https://www.marmiton.org/recettes/recette_tartines-ricotta-courgettes-petits-pois-menthe_531115.aspx",
+          URL: recipeURL.current.value,
         }),
       }
     );
