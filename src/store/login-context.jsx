@@ -35,8 +35,8 @@ export default function LoginContextProvider({children}){
             }
         );
         console.log(response.status);
-        if(response.status !== 204){
-            handleLogout();
+        if(response.status === 204){
+            localStorage.setItem("lastConnectionTime", new Date().getTime());
         }
     }
 
