@@ -8,7 +8,7 @@ export default function Droppable(props) {
   });
   
   return (
-    <TableCell ref={setNodeRef}>
+    <TableCell sx={{border: 'none'}} ref={setNodeRef}>
       {props.children}
     </TableCell>
   );

@@ -1,4 +1,5 @@
-import { Button, Container, Stack, TextField, Box, Dialog, DialogTitle, DialogContent, DialogContentText } from "@mui/material";
+import { Button, Container, Stack, TextField, Box, Dialog, DialogTitle, DialogContent, DialogContentText, IconButton, Fab } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import RecipeCard from "../components/RecipeCard";
 import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,6 @@ export default function Recipes({ displayMode = "Full" }) {
       }
     );
     const recipes = await response.json();
-    //console.log(recipes);
     setRecipes(recipes);
   }
 
@@ -48,7 +48,7 @@ export default function Recipes({ displayMode = "Full" }) {
   }, []);
 
   return (
-    <Container>
+    <Box sx={{ marginTop: 4, width: '100%' }}>
       <Dialog open={dialogIsOpen}>
         <DialogTitle>Erreur de récupération</DialogTitle>
         <DialogContent>
@@ -61,22 +61,26 @@ export default function Recipes({ displayMode = "Full" }) {
         </DialogContent>
       </Dialog>
       {displayMode == "Full" && (
-        <Box sx={{ marginBottom: 4 }}>
+        <Box>
+        <Box sx={{ marginBottom: 4, display: 'flex', marginLeft: 10}}>
           <TextField
             inputRef={recipeURL}
-            label="Télécharger une recette"
+            label="Entrez l'URL d'une recette à copier"
             size="small"
+            placeholder="https://www.marmiton.org/recettes/recette_tiramisu-recette-originale_12023.aspx"
             sx={{ width: 975 }}
           />
-          <Button onClick={scrape} variant="contained" sx={{ marginLeft: 2 }}>
-            Copier une recette
+          <Button onClick={scrape} variant="contained" sx={{ height: 40 }}>
+            Copier
           </Button>
-          <Button onClick={() => navigate('/recipe')}>
-            Nouvelle recette
-          </Button>
+          <Fab aria-label="Nouvelle recette" onClick={() => navigate('/recipe')} color="primary" sx={{ marginLeft: 'auto', marginRight: 5}}>
+          <AddIcon />
+          </Fab>
+        </Box>
+
         </Box>
       )}
-      <Box>
+      <Container>
         <Stack direction="row">
           {recipes.map((recipe, index) => (
             <RecipeCard
@@ -88,7 +92,7 @@ export default function Recipes({ displayMode = "Full" }) {
             />
           ))}
         </Stack>
-      </Box>
-    </Container>
+      </Container>
+    </Box>
   );
 }

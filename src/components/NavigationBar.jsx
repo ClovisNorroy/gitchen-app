@@ -22,13 +22,13 @@ function NavigationBar(){
 
     return(
         <Box sx={{ flexGrow: 1}}>
-            <AppBar>
-                <Toolbar id="navbar">
+            <AppBar position='static' sx={{ height: '7%'}}>
+                <Toolbar id="navbar" sx={{ marginLeft: 4}}>
                     <NavLink to="/planner">
                         <Button variant="contained" color="secondary">Menu</Button>
                     </NavLink>
                     <NavLink to="/recipes">
-                        <Button variant="contained" color="secondary">Recettes</Button>
+                        <Button variant="contained" color="secondary" sx={{ marginLeft: 2 }}>Recettes</Button>
                     </NavLink>
                     <div className="divider"/>
                     <Box sx={{width: 300}} className={isLoggedIn ? 'hidden-button' : undefined}>

@@ -80,7 +80,7 @@ export default function SortableList({sortableList, setSortableList, saveList}) 
   }
 
   return (
-    <List key="sortable-list" dense sx={{maxHeight: '85vh', overflowY: 'scroll', overflowX: 'unset'}}>
+    <List key="sortable-list" dense sx={{maxHeight: '70vh', overflowY: 'scroll', overflowX: 'unset'}}>
       {sortableList &&    <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}

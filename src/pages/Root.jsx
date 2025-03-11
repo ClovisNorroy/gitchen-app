@@ -8,7 +8,7 @@ function RootLayout() {
   return (
     <LoginContextProvider>
       <NavigationBar />
-      <Box sx={{mt: 10, height: '90vh', display: 'flex'}}>
+      <Box sx={{ height: '93vh', display: 'flex'}}>
         <Outlet />
       </Box>
       <CookieBanner/>

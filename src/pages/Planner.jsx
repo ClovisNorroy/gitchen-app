@@ -1,4 +1,4 @@
-import { TableContainer, Box, Grid, Typography, Container, Stack } from "@mui/material";
+import { TableContainer, Box, Grid, Typography, Stack, Paper } from "@mui/material";
 import Menu from "../components/Menu";
 import { useLoaderData } from "react-router-dom";
 import { checkUserIsLogged } from "../assets/helperFunctions";
@@ -18,6 +18,7 @@ export default function Planner(){
 
     useEffect( () => {
       if(meals)
+        console.log('saving menu');
           saveMenu();
     }, [meals])
 
@@ -99,27 +100,36 @@ export default function Planner(){
       }
 
     return(
-        <Grid container>
+      <Box sx={{backgroundColor: 'grey'}}>
+        <Grid container columnSpacing={2} rowSpacing={2} sx={{ margin: 1, width: '99%'}}>
           <DndContext onDragEnd={handleDragEnd}>
             <Grid item xs={10}>
-              <TableContainer>
-                <Menu handleMealChange={handleMealChange} resetMenu={resetMenu} meals={meals}/>
-              </TableContainer>
+              <Paper variant='outlined' sx={{marginBottom: 2}}>
+                <TableContainer>
+                  <Menu handleMealChange={handleMealChange} resetMenu={resetMenu} meals={meals}/>
+                </TableContainer>
+              </Paper>
               <Box>
-                <Stack>
-                  <Recipes displayMode={"bottomPanel"}/>
-                </Stack>
+                <Paper variant='outlined' sx={{padding: 3}}>
+                  <Typography variant='h4'>Mes recettes</Typography>
+                  <Stack>
+                    <Recipes displayMode={"bottomPanel"}/>
+                  </Stack>                  
+                </Paper>
               </Box>
             </Grid>
           </DndContext>
 
             {/* Right Side Panel: Grocery List */}
-            <Grid item xs={2} borderLeft="solid black 2px" maxHeight='90vh'>             
+            <Grid item xs={2} >
+              <Paper variant='outlined' sx={{ maxHeight: '120'}}>
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
                 >Liste des courses</Typography>
-                <SortableList sortableList={groceryList} setSortableList={setGroceryList} saveList={saveGroceryList}/>
+                <SortableList sortableList={groceryList} setSortableList={setGroceryList} saveList={saveGroceryList}/>              
+              </Paper>
             </Grid>
         </Grid>
+      </Box>
     );
 }
 

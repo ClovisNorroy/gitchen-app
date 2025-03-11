@@ -1,11 +1,11 @@
-import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import {Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import Droppable from "./Droppable";
 
 export default function Menu({meals, handleMealChange, resetMenu}){
 
     const weekHeader = [<TableCell key={"weekHeader_day_0"}></TableCell>];
     for( let day = 1 ; day <= 7; day++){
-        weekHeader.push(<TableCell key={"weekHeader_day_"+day}>{'Jour '+ day}</TableCell>);
+        weekHeader.push(<TableCell key={"weekHeader_day_"+day} align='center'><Typography variant='h6'>{'Jour '+ day}</Typography></TableCell>);
     }
 
     return (
@@ -16,9 +16,9 @@ export default function Menu({meals, handleMealChange, resetMenu}){
                 {weekHeader}
             </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody >
             <TableRow>
-            <TableCell>Midi</TableCell>
+            <TableCell sx={{ border: 'none'}}><Typography variant='h6'>Midi</Typography></TableCell>
             {
                 meals.slice(0, 7).map( (meal, mealNumber) => {
                     return (
@@ -40,7 +40,7 @@ export default function Menu({meals, handleMealChange, resetMenu}){
             }
             </TableRow>
             <TableRow>
-                <TableCell>Soir</TableCell>
+                <TableCell sx={{ border: 'none'}}><Typography variant='h6'>Soir</Typography></TableCell>
                 {
                 meals.slice(7, 14).map( (meal, mealNumber) => {
                     return(
