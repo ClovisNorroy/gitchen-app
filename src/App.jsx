@@ -25,7 +25,8 @@ function App({children}) {
         { path: '/register', element: <Signup/>},
         { path: '/login', element: <Login/>},
         { path: '/recipes', element: <Recipes/>},
-        { path: '/recipe', element: <Recipe/>}
+        { path: '/recipe', element: <Recipe/>},
+        { path: '/recipe/:recipeID', element: <Recipe/>}
       ]
     }
   ])

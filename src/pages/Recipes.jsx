@@ -2,7 +2,7 @@ import { Button, Container, Stack, TextField, Box, Dialog, DialogTitle, DialogCo
 import AddIcon from '@mui/icons-material/Add';
 import RecipeCard from "../components/RecipeCard";
 import { useRef, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Recipes({ displayMode = "Full" }) {
   const recipeURL = useRef();
@@ -12,7 +12,7 @@ export default function Recipes({ displayMode = "Full" }) {
 
   async function loadRecipes() {
     const response = await fetch(
-      import.meta.env.VITE_APP_GITCHEN_API + "/api/recipes",
+      import.meta.env.VITE_APP_GITCHEN_API + "/api/recipe",
       {
         method: "GET",
         credentials: "include",
@@ -34,11 +34,13 @@ export default function Recipes({ displayMode = "Full" }) {
         }),
       }
     );
-    if(response.status === "200"){
+    console.log(response.status);
+    if(response.status === 200){
       const recipeData = await response.json();
       navigate("/recipe", { state: { recipe: recipeData } });
     }
     else{
+      console.log(response.status);
       setDialogIsOpen(true);
     }
   }
@@ -83,13 +85,15 @@ export default function Recipes({ displayMode = "Full" }) {
       <Container>
         <Stack direction="row">
           {recipes.map((recipe, index) => (
-            <RecipeCard
-              id={index}
-              key={recipe.id}
-              image={recipe.image_mini}
-              name={recipe.name}
-              ingredients={recipe.ingredients}
-            />
+            <Link to={`/recipe/${recipe.id}`}>
+              <RecipeCard
+                id={index}
+                key={recipe.id}
+                image={recipe.image}
+                name={recipe.name}
+                ingredients={recipe.ingredients}
+              />
+            </Link>
           ))}
         </Stack>
       </Container>

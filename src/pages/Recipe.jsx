@@ -1,48 +1,66 @@
-import { Button, Stack, TextField, Typography, Paper } from "@mui/material";
-import { useLocation } from "react-router-dom";
-import { makeListKeys } from "../assets/helperFunctions";
+import { Button, Stack, TextField, Typography, Paper, List, ListItem } from "@mui/material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SortableList from "../components/SortableList";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Recipe(){
+    const [mode, setMode] = useState('edition');
     const {state} = useLocation();
     const {recipe} = state || {};
-    const titleRef = useRef('');
-    const imageRef = useRef();
+    const [name, setName] = useState(recipe ? recipe.name : '');
     const [ingredients, setIngredients] = useState(recipe ? recipe.ingredients : []);
     const [instructions, setInstructions] = useState(recipe ? recipe.instructions : []);
     const [displayedImage, setDisplayedImage] = useState(null);
-    const keysInstructionsList = makeListKeys( recipe ? recipe.instructions.length : []);
+    const navigate = useNavigate();
+    const { recipeID } = useParams();
+
+    useEffect( () => {
+        if(recipeID){
+            setMode('lecture');
+            fetchRecipe();
+        }
+        else if(recipe){
+            setName(recipe.name);
+            resizeImage(recipe.image);
+        }
+    }, [])
+
+    async function fetchRecipe(){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+`/api/recipe/${recipeID}`,
+            {
+                method: 'GET',
+                credentials: 'include'
+            }
+        );
+        if(response.status === 200){
+            const dataRecipe = await response.json();
+            setName(dataRecipe[0].name);
+            setIngredients(dataRecipe[0].ingredients.map( (ingredient, index) => {return {'item': ingredient, 'index': index}}));
+            setInstructions(dataRecipe[0].instructions.map( (instruction, index) => {return {'item': instruction, 'index': index}}));
+            setDisplayedImage(`data:image/jpg;base64,${dataRecipe[0].image}`);
+        }
+        else{
+            navigate('/recipes');
+        }
+    }
 
     async function saveRecipe(){
-        let ingredientArray = ingredients.map( (ingredientObject) =>  ingredientObject.item);
-/*         const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/recipe",
-            {
-                method: "POST",
-                credentials: "include",
-                body: JSON.stringify({
-                    title: title,
-                    ingredients: ingredientArray.join(";"),
-                    instructions: recipe.instructions.join(";"),
-                    image: recipe.image
-                })
-            }
-        ) */
-            const formData = new FormData();
-            formData.append('title', titleRef.current.value);
-            formData.append('image', displayedImage);
-            formData.append('ingredients', ingredients.map((ingredient) => ingredient.item));
-            formData.append('instructions', instructions.map((instruction) => instruction.item));
-            console.log(formData);
             const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/recipe",
                 {
                     method: "POST",
                     credentials: "include",
-                    body: formData
+                    body: JSON.stringify({
+                        name: recipe.name,
+                        ingredients: ingredients.map((ingredient) => ingredient.item).join(";"),
+                        instructions: instructions.map((instruction) => instruction.item).join(";"),
+                        image: displayedImage
+                    })
                 }
             )
 
-        console.log(response.status);
+        if(response.status === 200){
+            navigate('/recipes');
+        }
     }
 
     async function saveIngredients(ingredientList, setSortableIngredients, newItemRef){
@@ -54,7 +72,6 @@ export default function Recipe(){
             newItemRef.current.value = "";
         }
         setIngredients(upToDateIngredientList);
-        console.log(ingredientList);
     }
 
     async function saveInstructions(instructionList, setSortableInstructions, newItemRef){
@@ -66,7 +83,20 @@ export default function Recipe(){
             newItemRef.current.value = "";
         }
         setInstructions(upToDateInstructionList);
-        console.log(instructionList);
+    }
+
+    function resizeImage(base64Image){
+        const img = new Image();
+        img.src = 'data:image/jpg;base64,'+base64Image;
+        img.onload = function (){
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = 225;
+            canvas.width = 225;
+            context.drawImage(img, 0, 0, 225, 225);
+            let dataURL = canvas.toDataURL('image/jpeg', 0.8);
+            setDisplayedImage(dataURL);
+        };
     }
 
     function handleImageUpload(event){
@@ -74,7 +104,6 @@ export default function Recipe(){
         const file = event.target.files[0];
 
         if(file){
-            imageRef.current = file;
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (e) => {
@@ -87,7 +116,7 @@ export default function Recipe(){
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(recipeImage, 0, 0, 225, 225);
 
-                    const resisedDataUrl = canvas.toDataURL('image/png', 0.8);
+                    const resisedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
                     setDisplayedImage(resisedDataUrl);
                 }
             }
@@ -97,22 +126,34 @@ export default function Recipe(){
     return(
         <Stack>
             <Paper>
-                {recipe ?<Typography variant="h3">{recipe.title}</Typography> : <TextField inputRef={titleRef}/>}
+                { mode === 'edition' ? <TextField value={name} onChange={ event => setName(event.target.value)}/> : <Typography variant="h2">{name}</Typography>}
             </Paper>
             <Paper>
-                {recipe ? <img src={`data:image/jpeg;base64,${recipe.image}`}/> : 
-                <><input type="file" accept="image/*" onChange={(event) => handleImageUpload(event)}/>
-                { displayedImage && <img src={displayedImage}/> }</>}
+                {mode === 'edition' && <input type="file" accept="image/*" onChange={(event) => handleImageUpload(event)}/>}
+                { displayedImage && <img src={displayedImage}/> }
             </Paper>
             <Paper>
-                <Typography>Ingrédients</Typography>
-                <SortableList sortableList={ingredients} setSortableList={setIngredients} saveList={saveIngredients}/>
+                <Typography variant='h5'>Ingrédients</Typography>
+                { mode === 'edition' ? 
+                    <SortableList sortableList={ingredients} setSortableList={setIngredients} saveList={saveIngredients}/>
+                    :
+                    <List>
+                        {ingredients.map((ingredient) => <ListItem key={ingredient.id}>{ingredient.item}</ListItem>)}
+                    </List>
+                }
             </Paper>
             <Paper>
-            <Typography>Instructions</Typography>
-            <SortableList sortableList={instructions} setSortableList={setInstructions} saveList={saveInstructions}/>
+            <Typography variant='h5'>Instructions</Typography>
+            { mode === 'edition' 
+                ? 
+                <SortableList sortableList={instructions} setSortableList={setInstructions} saveList={saveInstructions}/>
+                :
+                <List>
+                    { instructions.map((instruction) => <ListItem key={instruction.id}>{instruction.item}</ListItem>) }
+                </List>
+            }
             </Paper>
-            <Button onClick={saveRecipe}>Sauvegarder la recette</Button>
+            { mode === 'edition' && <Button onClick={saveRecipe}>Sauvegarder la recette</Button> }
         </Stack>
     )
 
