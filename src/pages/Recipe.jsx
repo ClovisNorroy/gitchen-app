@@ -1,7 +1,9 @@
-import { Button, Stack, TextField, Typography, Paper, List, ListItem } from "@mui/material";
+import { Button, Stack, TextField, Typography, Paper, List, ListItem, Dialog, DialogContent, DialogContentText, DialogTitle, Fab, Box } from "@mui/material";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SortableList from "../components/SortableList";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Recipe(){
     const [mode, setMode] = useState('edition');
@@ -11,6 +13,8 @@ export default function Recipe(){
     const [ingredients, setIngredients] = useState(recipe ? recipe.ingredients : []);
     const [instructions, setInstructions] = useState(recipe ? recipe.instructions : []);
     const [displayedImage, setDisplayedImage] = useState(null);
+    const[deleteErrorDialogIsOpen, setDeleteErrorDialogIsOpen] = useState(false);
+    const[deletionComfirmationDialogIsOpen, setDeletionComfirmationDialogIsOpen] = useState(false);
     const navigate = useNavigate();
     const { recipeID } = useParams();
 
@@ -34,10 +38,11 @@ export default function Recipe(){
         );
         if(response.status === 200){
             const dataRecipe = await response.json();
-            setName(dataRecipe[0].name);
-            setIngredients(dataRecipe[0].ingredients.map( (ingredient, index) => {return {'item': ingredient, 'index': index}}));
-            setInstructions(dataRecipe[0].instructions.map( (instruction, index) => {return {'item': instruction, 'index': index}}));
-            setDisplayedImage(`data:image/jpg;base64,${dataRecipe[0].image}`);
+            console.log(dataRecipe);
+            setName(dataRecipe.name);
+            setIngredients(dataRecipe.ingredients.map( (ingredient, index) => {return {'item': ingredient, 'id': index}}));
+            setInstructions(dataRecipe.instructions.map( (instruction, index) => {return {'item': instruction, 'id': index}}));
+            setDisplayedImage(`data:image/jpg;base64,${dataRecipe.image}`);
         }
         else{
             navigate('/recipes');
@@ -59,7 +64,22 @@ export default function Recipe(){
             )
 
         if(response.status === 200){
+            setMode('lecture');
+        }
+    }
+
+    async function deleteRecipe(){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+`/api/recipe/${recipeID}`,
+            {
+                method: 'DELETE',
+                credentials: 'include',
+            }
+        )
+        if(response.status === 200){
             navigate('/recipes');
+        }
+        else{
+            setDeleteErrorDialogIsOpen(true);
         }
     }
 
@@ -123,38 +143,90 @@ export default function Recipe(){
         }
     }
 
-    return(
-        <Stack>
-            <Paper>
-                { mode === 'edition' ? <TextField value={name} onChange={ event => setName(event.target.value)}/> : <Typography variant="h2">{name}</Typography>}
-            </Paper>
-            <Paper>
-                {mode === 'edition' && <input type="file" accept="image/*" onChange={(event) => handleImageUpload(event)}/>}
-                { displayedImage && <img src={displayedImage}/> }
-            </Paper>
-            <Paper>
-                <Typography variant='h5'>Ingrédients</Typography>
-                { mode === 'edition' ? 
-                    <SortableList sortableList={ingredients} setSortableList={setIngredients} saveList={saveIngredients}/>
-                    :
-                    <List>
-                        {ingredients.map((ingredient) => <ListItem key={ingredient.id}>{ingredient.item}</ListItem>)}
-                    </List>
-                }
-            </Paper>
-            <Paper>
-            <Typography variant='h5'>Instructions</Typography>
-            { mode === 'edition' 
-                ? 
-                <SortableList sortableList={instructions} setSortableList={setInstructions} saveList={saveInstructions}/>
-                :
-                <List>
-                    { instructions.map((instruction) => <ListItem key={instruction.id}>{instruction.item}</ListItem>) }
-                </List>
-            }
-            </Paper>
-            { mode === 'edition' && <Button onClick={saveRecipe}>Sauvegarder la recette</Button> }
-        </Stack>
-    )
 
+
+    return (
+      <>
+        <Dialog open={deleteErrorDialogIsOpen}>
+          <DialogTitle>Erreur de suppression</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+                Une erreur est survenu lors de la suppression de la recette.
+            </DialogContentText>
+            <Button onClick={() => {setDeleteErrorDialogIsOpen(false)}}>Fermer</Button>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={deletionComfirmationDialogIsOpen}>
+          <DialogTitle>Confirmation de suppression</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+                Voulez-vous vraiment supprimer cette recette ?
+            </DialogContentText>
+            <Button onClick={() => {setDeletionComfirmationDialogIsOpen(false)}} color="error">Annuler</Button>
+            <Button onClick={() => {deleteRecipe() ; setDeletionComfirmationDialogIsOpen(false);}} color="primary">Confirmer</Button>
+          </DialogContent>
+        </Dialog>
+        <Box sx={{ position: 'absolute', right: 15, top: 80}}>
+          <Fab onClick={() => setDeletionComfirmationDialogIsOpen(true)} color="error"><DeleteIcon/></Fab>
+          <Fab onClick={() => setMode('edition')} color="info"><EditIcon/></Fab>
+        </Box>
+        <Stack>
+          <Paper>
+            {mode === "edition" ? (
+              <TextField
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+              />
+            ) : (
+              <Typography variant="h2">{name}</Typography>
+            )}
+          </Paper>
+          <Paper>
+            {mode === "edition" && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(event) => handleImageUpload(event)}
+              />
+            )}
+            {displayedImage && <img src={displayedImage} />}
+          </Paper>
+          <Paper>
+            <Typography variant="h5">Ingrédients</Typography>
+            {mode === "edition" ? (
+              <SortableList
+                sortableList={ingredients}
+                setSortableList={setIngredients}
+                saveList={saveIngredients}
+              />
+            ) : (
+              <List>
+                {ingredients.map((ingredient) => (
+                  <ListItem key={`ingredient-${ingredient.id}`}>{ingredient.item}</ListItem>
+                ))}
+              </List>
+            )}
+          </Paper>
+          <Paper>
+            <Typography variant="h5">Instructions</Typography>
+            {mode === "edition" ? (
+              <SortableList
+                sortableList={instructions}
+                setSortableList={setInstructions}
+                saveList={saveInstructions}
+              />
+            ) : (
+              <List>
+                {instructions.map((instruction) => (
+                  <ListItem key={`instruction-${instruction.id}`}>{instruction.item}</ListItem>
+                ))}
+              </List>
+            )}
+          </Paper>
+          {mode === "edition" && (
+            <Button onClick={saveRecipe}>Sauvegarder la recette</Button>
+          )}
+        </Stack>
+      </>
+    );
 }
