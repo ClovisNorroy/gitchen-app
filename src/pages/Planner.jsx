@@ -24,6 +24,9 @@ export default function Planner(){
 
     function handleDragEnd(event){
       const { active, over } = event;
+      if(!over){
+        return;
+      }
       handleMealChange(active.data.current.name, over.id);
       addGroceries(active.data.current.ingredients);
     }
@@ -103,12 +106,14 @@ export default function Planner(){
       <Box sx={{backgroundColor: 'grey'}}>
         <Grid container columnSpacing={2} rowSpacing={2} sx={{ margin: 1, width: '99%'}}>
           <DndContext onDragEnd={handleDragEnd}>
+            {/* Left side top panel: Menu */}
             <Grid item xs={10}>
               <Paper variant='outlined' sx={{marginBottom: 2}}>
                 <TableContainer>
                   <Menu handleMealChange={handleMealChange} resetMenu={resetMenu} meals={meals}/>
                 </TableContainer>
               </Paper>
+              {/* Left side bottom panel: Recipes */}
               <Box>
                 <Paper variant='outlined' sx={{padding: 3}}>
                   <Typography variant='h4'>Mes recettes</Typography>
@@ -120,7 +125,7 @@ export default function Planner(){
             </Grid>
           </DndContext>
 
-            {/* Right Side Panel: Grocery List */}
+            {/* Right side panel: Grocery list */}
             <Grid item xs={2} >
               <Paper variant='outlined' sx={{ maxHeight: '120'}}>
                 <Typography textAlign='center' variant="h5" marginBottom='20px'
