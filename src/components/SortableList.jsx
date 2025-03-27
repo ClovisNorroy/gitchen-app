@@ -31,8 +31,8 @@ export default function SortableList({sortableList, setSortableList, saveList}) 
   );
 
   useEffect( () => {
-/*     if(sortableList )
-      saveList(sortableList, setSortableList, newItemRef); */
+    if(sortableList )
+      saveList(sortableList, setSortableList, newItemRef);
   }, [sortableList])
 
   function handleItemChange(newValue, indexToChange) {
