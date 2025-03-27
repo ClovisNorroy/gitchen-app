@@ -24,9 +24,6 @@ export default function Planner(){
 
     function handleDragEnd(event){
       const { active, over } = event;
-      if(!over){
-        return;
-      }
       handleMealChange(active.data.current.name, over.id);
       addGroceries(active.data.current.ingredients);
     }

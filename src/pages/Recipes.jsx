@@ -2,7 +2,7 @@ import { Button, Container, Stack, TextField, Box, Dialog, DialogTitle, DialogCo
 import AddIcon from '@mui/icons-material/Add';
 import RecipeCard from "../components/RecipeCard";
 import { useRef, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Recipes({ displayMode = "Full" }) {
   const recipeURL = useRef();
@@ -85,15 +85,14 @@ export default function Recipes({ displayMode = "Full" }) {
       <Container>
         <Stack direction="row">
           {recipes.map((recipe, index) => (
-            <Link to={`/recipe/${recipe.id}`}>
               <RecipeCard
                 id={index}
-                key={recipe.id}
+                key={`recipecard-${recipe.id}`}
                 image={recipe.image}
                 name={recipe.name}
                 ingredients={recipe.ingredients}
+                nolink
               />
-            </Link>
           ))}
         </Stack>
       </Container>
