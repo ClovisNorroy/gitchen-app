@@ -87,11 +87,12 @@ export default function Recipes({ displayMode = "Full" }) {
           {recipes.map((recipe, index) => (
               <RecipeCard
                 id={index}
+                recipeid={recipe.id}
                 key={`recipecard-${recipe.id}`}
                 image={recipe.image}
                 name={recipe.name}
                 ingredients={recipe.ingredients}
-                nolink
+                nolink={displayMode == "Full" ? false : true}
               />
           ))}
         </Stack>
