@@ -21,7 +21,7 @@ export default function RecipeCard({name, image, id, ingredients, recipeid, noli
         display: "flex",
         width: 400,
         height: 100,
-        marginRight: 3,
+        marginRight: 2,
       }}
     >
       <CardMedia
@@ -35,7 +35,7 @@ export default function RecipeCard({name, image, id, ingredients, recipeid, noli
         {...listeners}
         {...attributes}
         sx={{ 
-          marginRight: 3,
+          marginRight: 2,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center'
