@@ -13,7 +13,7 @@ export default function LoginContextProvider({children}){
     useEffect(() => {
         if(checkUserIsLogged()){
             setIsLoggedIn(true);
-            refreshToken();
+            //refreshToken();
         }
     }, [])
 
