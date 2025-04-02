@@ -50,7 +50,7 @@ export default function Recipes({ displayMode = "Full" }) {
   }, []);
 
   return (
-    <Box sx={{ marginTop: 4, width: '100%' }}>
+    <Box sx={{ marginTop: 4, width: '100%', height: '90vh'}}>
       <Dialog open={dialogIsOpen}>
         <DialogTitle>Erreur de récupération</DialogTitle>
         <DialogContent>

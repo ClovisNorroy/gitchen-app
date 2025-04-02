@@ -94,7 +94,6 @@ export default function Home() {
           />
         </Paper>
       </Box>
-      <Box></Box>
       <Container sx={{ py: 8, textAlign: "center", my: 4 }}>
         <Typography
           variant="h4"
