@@ -31,9 +31,9 @@ function NavigationBar(){
                         <Button variant="contained" color="secondary" sx={{ marginLeft: 2 }}>Recettes</Button>
                     </NavLink>
                     <div className="divider"/>
-                    <Box sx={{width: 300}} className={isLoggedIn ? 'hidden-button' : undefined}>
-                        <Typography><CloudOffIcon/>  Vous êtes hors ligne</Typography>
-                    </Box>
+                    <NavLink to="/register" className={isLoggedIn ? 'hidden-button' : undefined} >
+                        <Button variant="contained" color="secondary" sx={{ marginRight: 2 }}>Inscription</Button>
+                    </NavLink >
                     <NavLink to="/login" className={isLoggedIn ? 'hidden-button' : undefined}>
                         <Button variant="contained" color="secondary">Connexion</Button>
                     </NavLink >
