@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Button, Toolbar } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
 import { useContext } from "react";
@@ -23,10 +23,10 @@ function NavigationBar(){
         <Box sx={{ flexGrow: 1}}>
             <AppBar position='static' sx={{ height: '7%'}}>
                 <Toolbar id="navbar" sx={{ marginLeft: 4}}>
-                    <NavLink to="/planner">
+                    <NavLink to="/planner" className={isLoggedIn ? undefined : 'hidden-button'}>
                         <Button variant="contained" color="secondary">Menu</Button>
                     </NavLink>
-                    <NavLink to="/recipes">
+                    <NavLink to="/recipes" className={isLoggedIn ?  undefined : 'hidden-button'}>
                         <Button variant="contained" color="secondary" sx={{ marginLeft: 2 }}>Recettes</Button>
                     </NavLink>
                     <div className="divider"/>
