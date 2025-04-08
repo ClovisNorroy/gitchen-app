@@ -1,8 +1,7 @@
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import "./navbar.css";
-import { useContext, useEffect, useState } from "react";
-import CloudOffIcon from '@mui/icons-material/CloudOff';
+import { useContext } from "react";
 import { LoginContext } from "../store/login-context";
 
 function NavigationBar(){
