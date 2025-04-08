@@ -88,7 +88,7 @@ export default function Home() {
           elevation={3}
         >
           <img
-            src="/src/assets/Planner_screenshot_landing_page.png"
+            src="/Planner_screenshot_landing_page.png"
             alt="Planner screenshot"
             width={"100%"}
           />
