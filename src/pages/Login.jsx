@@ -47,7 +47,7 @@ export default function Login() {
                   required
                   fullWidth
                   id="email"
-                  label="Username"
+                  label="email"
                   name="email"
                   autoComplete="email"
                   inputRef={usernameRef}
@@ -72,7 +72,7 @@ export default function Login() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2}}
-                onClick={sendLogin}>Sign In</Button>
+                onClick={sendLogin}>Connexion</Button>
             </Box>
           </Box>
     </Container>

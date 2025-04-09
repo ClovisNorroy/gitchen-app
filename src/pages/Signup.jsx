@@ -77,8 +77,8 @@ function Signup() {
   }
 
   const userCreatedSuccessfully = <>
-    <Typography>Your account has been created Successfully !</Typography>
-    <Typography>You will be redirected to the login page in a moment</Typography>
+    <Typography>Votre compte a été créé avec succès !</Typography>
+    <Typography>Vous allez être redirigé vers la page de connexion dans un instant</Typography>
   </>
   return (
     <>
@@ -92,7 +92,7 @@ function Signup() {
           }}
           >
             { isUserCreated ? userCreatedSuccessfully : <>
-            <Typography component="h1" variant="h5">Sign Up
+            <Typography component="h1" variant="h5">Inscription
             </Typography>
             <Box component="form" noValidate onSubmit={sendSignup} sx={{ mt: 3}}>
               <Grid container spacing={2}>
@@ -169,7 +169,7 @@ function Signup() {
                 variant="contained"
                 disabled={signupIsDisabled}
                 onClick={sendSignup}
-                sx={{ mt: 3, mb: 2}}>Sign Up</Button>
+                sx={{ mt: 3, mb: 2}}>Inscription</Button>
             </Box> </>}
           </Box> 
       </Container> 
