@@ -11,7 +11,7 @@ function RootLayout() {
     <LoginContextProvider>
       <ThemeProvider theme={theme}>
         <NavigationBar />
-        <Box sx={{ display: 'flex'}}>
+        <Box sx={{ display: 'flex', minHeight: '90vh'}}>
           <Outlet />
         </Box>
         <CookieBanner/>
