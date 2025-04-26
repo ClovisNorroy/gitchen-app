@@ -7,18 +7,6 @@ import { LoginContext } from "../store/login-context";
 function NavigationBar(){
     const { isLoggedIn, handleLogout } = useContext(LoginContext);
 
-    function logout(){
-        fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/logout", {
-            credentials: "include",
-            method: "POST"
-        })
-        .then(response => 
-            {
-                console.log(response.text());
-                handleLogout();
-            });
-        }
-
     return(
         <Box sx={{ flexGrow: 1}}>
             <AppBar position='static' sx={{ height: '7%'}}>
@@ -37,7 +25,7 @@ function NavigationBar(){
                         <Button variant="contained" color="secondary">Connexion</Button>
                     </NavLink >
                     <Box className={isLoggedIn ? undefined : 'hidden-button'}>
-                        <Button variant="contained" color="secondary" onClick={logout} id="logout-button">Déconnexion</Button>
+                        <Button variant="contained" color="secondary" onClick={handleLogout} id="logout-button">Déconnexion</Button>
                     </Box>
                 </Toolbar>
             </AppBar>

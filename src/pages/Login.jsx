@@ -47,7 +47,7 @@ export default function Login() {
                   required
                   fullWidth
                   id="email"
-                  label="email"
+                  label="Email"
                   name="email"
                   autoComplete="email"
                   inputRef={usernameRef}

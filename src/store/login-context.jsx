@@ -1,5 +1,7 @@
-import { createContext, useEffect, useReducer, useState } from "react";
+import { createContext, useEffect, useState} from "react";
 import { checkUserIsLogged } from "../assets/helperFunctions";
+import { useNavigate } from "react-router-dom";
+import { Dialog, DialogActions, DialogTitle, DialogContent, Button } from "@mui/material";
 
 export const LoginContext = createContext({
     isLoggedIn: false,
@@ -9,6 +11,8 @@ export const LoginContext = createContext({
 
 export default function LoginContextProvider({children}){
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(checkUserIsLogged()){
@@ -22,9 +26,18 @@ export default function LoginContextProvider({children}){
         setIsLoggedIn(true);
     }
 
-    function handleLogout(){
-        localStorage.removeItem("lastConnectionTime");
-        setIsLoggedIn(false);
+    async function handleLogout(){
+        const response = await fetch(import.meta.env.VITE_APP_GITCHEN_API+"/api/logout", {
+            credentials: "include",
+            method: "POST"
+        });
+        if(response.status === 204){
+            localStorage.removeItem("lastConnectionTime");
+            setIsLoggedIn(false);
+            navigate('/');
+        }else{
+            setIsDialogOpen(true);
+        }
     }
 
     async function refreshToken(){
@@ -47,6 +60,13 @@ export default function LoginContextProvider({children}){
     }
 
     return <LoginContext.Provider value={contextValue}>
+        <Dialog open={isDialogOpen}>
+            <DialogTitle>La déconnexion a échouer</DialogTitle>
+            <DialogContent>Veuillez réessayer plus tard</DialogContent>
+            <DialogActions>
+                <Button onClick={ () => {setIsDialogOpen(false) ; }}>Fermer</Button>
+            </DialogActions>
+        </Dialog>
         {children}
     </LoginContext.Provider>
 }
